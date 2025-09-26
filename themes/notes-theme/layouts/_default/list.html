@@ -1,56 +1,46 @@
 {{- define "main" -}}
 <main class="container">
-  {{- if .IsHome -}}
-    {{- with .Site.GetPage "section" "posts" -}}
-      <section>
-        <ul class="post-list">
-          {{- range .Paginator.Pages -}}
-          <li class="post-item">
-            <a href="{{ .RelPermalink }}">
-              <h2 class="post-title">{{ .Title }}</h2>
-              <div class="post-meta">
-                {{- with .Date -}}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>{{- end -}}
-                {{- with .Params.tags -}}
-                  <span>
-                    {{- range $index, $tag := . -}}
-                      {{- if gt $index 0 }}, {{ end -}}
-                      #{{ $tag }}
-                    {{- end -}}
-                  </span>
-                {{- end -}}
-              </div>
-              {{- with .Summary -}}
-              <p class="post-summary">{{ . }}</p>
-              {{- end -}}
-            </a>
-          </li>
-          {{- end -}}
-        </ul>
-        {{- partial "pagination.html" .Paginator -}}
-      </section>
-    {{- else -}}
-      <p>还没有发布文章，使用 <code>hugo new posts/hello-world.md</code> 创建第一篇文章。</p>
-    {{- end -}}
-  {{- else -}}
-    <section>
+  <section class="list-section">
+    <div class="section-heading">
       <h1>{{ .Title }}</h1>
-      <ul class="post-list">
-        {{- range .Paginator.Pages -}}
-        <li class="post-item">
-          <a href="{{ .RelPermalink }}">
-            <h2 class="post-title">{{ .Title }}</h2>
-            <div class="post-meta">
-              {{- with .Date -}}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>{{- end -}}
-            </div>
-            {{- with .Summary -}}
-            <p class="post-summary">{{ . }}</p>
+      {{ with .Params.description }}
+      <p>{{ . }}</p>
+      {{ end }}
+    </div>
+    {{- if gt (len .Paginator.Pages) 0 -}}
+    <div class="post-grid">
+      {{- range .Paginator.Pages -}}
+      <article class="post-card">
+        <a href="{{ .RelPermalink }}">
+          <div class="post-card-meta">
+            {{- with .Date -}}
+            <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>
             {{- end -}}
-          </a>
-        </li>
-        {{- end -}}
-      </ul>
-      {{- partial "pagination.html" .Paginator -}}
-    </section>
-  {{- end -}}
+            {{- $minutes := .ReadingTime -}}
+            <span class="separator">·</span>
+            <span>{{ cond (lt $minutes 2) "约 1 分钟读完" (printf "%d 分钟读完" $minutes) }}</span>
+          </div>
+          <h2 class="post-card-title">{{ .Title }}</h2>
+          {{- if .Params.summary -}}
+          <p class="post-card-summary">{{ .Params.summary }}</p>
+          {{- else if .Summary -}}
+          <p class="post-card-summary">{{ .Summary | plainify | truncate 120 }}</p>
+          {{- end -}}
+          {{- with .Params.tags -}}
+          <ul class="post-card-tags">
+            {{- range . -}}
+            <li>#{{ . }}</li>
+            {{- end -}}
+          </ul>
+          {{- end -}}
+        </a>
+      </article>
+      {{- end -}}
+    </div>
+    {{- else -}}
+    <p>这里暂时还没有内容，稍后再来看。</p>
+    {{- end -}}
+    {{- partial "pagination.html" .Paginator -}}
+  </section>
 </main>
 {{- end -}}

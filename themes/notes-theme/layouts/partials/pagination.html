@@ -1,16 +1,15 @@
 {{- if gt .TotalPages 1 -}}
 <nav class="pagination">
-  <div>
-    {{- if .HasPrev -}}
-    <a href="{{ .Prev.URL }}">← 较新文章</a>
-    {{- else -}}
-    <span></span>
-    {{- end -}}
-  </div>
-  <div>
-    {{- if .HasNext -}}
-    <a href="{{ .Next.URL }}">较旧文章 →</a>
-    {{- end -}}
-  </div>
+  {{- if .HasPrev -}}
+  <a href="{{ .Prev.URL }}">← 较新文章</a>
+  {{- else -}}
+  <span class="disabled">← 较新文章</span>
+  {{- end -}}
+  <span class="disabled">第 {{ .PageNumber }} / {{ .TotalPages }} 页</span>
+  {{- if .HasNext -}}
+  <a href="{{ .Next.URL }}">较旧文章 →</a>
+  {{- else -}}
+  <span class="disabled">较旧文章 →</span>
+  {{- end -}}
 </nav>
 {{- end -}}

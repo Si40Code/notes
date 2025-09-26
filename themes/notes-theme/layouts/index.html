@@ -1,32 +1,81 @@
 {{- define "main" -}}
-<main class="container">
-  {{- $pages := where .Site.RegularPages "Type" "posts" -}}
-  {{- $paginator := .Paginate $pages -}}
-  {{- if gt (len $pages) 0 -}}
-  <section>
-    <ul class="post-list">
+{{ $hero := .Site.Params.hero }}
+<main class="container home">
+  <section class="hero">
+    <div class="hero-content">
+      {{ with $hero.kicker }}
+      <span class="hero-kicker">{{ . }}</span>
+      {{ end }}
+      <h1 class="hero-title">{{ default .Site.Title $hero.title }}</h1>
+      {{ with (default .Site.Params.description $hero.subtitle) }}
+      <p class="hero-subtitle">{{ . }}</p>
+      {{ end }}
+      {{ with .Site.Params.highlights }}
+      <ul class="hero-highlights">
+        {{ range . }}
+        <li>{{ . }}</li>
+        {{ end }}
+      </ul>
+      {{ end }}
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ default "/posts/" $hero.primary_url | relLangURL }}">
+          {{ default "开始阅读" $hero.primary_label }}
+        </a>
+        {{ with $hero.secondary_url }}
+        <a class="btn btn-ghost" href="{{ . | relLangURL }}">
+          {{ default "查看归档" $hero.secondary_label }}
+        </a>
+        {{ end }}
+      </div>
+      {{ with .Site.Params.social }}
+      <div class="hero-social">
+        {{ range . }}
+        <a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  {{- $posts := where .Site.RegularPages "Type" "posts" -}}
+  {{- $paginator := .Paginate $posts -}}
+  {{- if gt (len $posts) 0 -}}
+  <section id="latest">
+    <div class="section-heading">
+      <h2>最新文章</h2>
+      {{ with .Site.Params.latest_summary }}
+      <p>{{ . }}</p>
+      {{ end }}
+    </div>
+    <div class="post-grid">
       {{- range $paginator.Pages -}}
-      <li class="post-item">
+      <article class="post-card">
         <a href="{{ .RelPermalink }}">
-          <h2 class="post-title">{{ .Title }}</h2>
-          <div class="post-meta">
-            {{- with .Date -}}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>{{- end -}}
-            {{- with .Params.tags -}}
-              <span>
-                {{- range $index, $tag := . -}}
-                  {{- if gt $index 0 }}, {{ end -}}
-                  #{{ $tag }}
-                {{- end -}}
-              </span>
+          <div class="post-card-meta">
+            {{- with .Date -}}
+            <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006 年 01 月 02 日" | replace " 0" " " }}</time>
             {{- end -}}
+            {{- $minutes := .ReadingTime -}}
+            <span class="separator">·</span>
+            <span>{{ cond (lt $minutes 2) "约 1 分钟读完" (printf "%d 分钟读完" $minutes) }}</span>
           </div>
-          {{- with .Summary -}}
-          <p class="post-summary">{{ . }}</p>
+          <h2 class="post-card-title">{{ .Title }}</h2>
+          {{- if .Params.summary -}}
+          <p class="post-card-summary">{{ .Params.summary }}</p>
+          {{- else if .Summary -}}
+          <p class="post-card-summary">{{ .Summary | plainify | truncate 120 }}</p>
+          {{- end -}}
+          {{- with .Params.tags -}}
+          <ul class="post-card-tags">
+            {{- range . -}}
+            <li>#{{ . }}</li>
+            {{- end -}}
+          </ul>
           {{- end -}}
         </a>
-      </li>
+      </article>
       {{- end -}}
-    </ul>
+    </div>
     {{- partial "pagination.html" $paginator -}}
   </section>
   {{- else -}}
