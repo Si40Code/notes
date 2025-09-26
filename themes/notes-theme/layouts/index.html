@@ -1,0 +1,36 @@
+{{- define "main" -}}
+<main class="container">
+  {{- $pages := where .Site.RegularPages "Type" "posts" -}}
+  {{- $paginator := .Paginate $pages -}}
+  {{- if gt (len $pages) 0 -}}
+  <section>
+    <ul class="post-list">
+      {{- range $paginator.Pages -}}
+      <li class="post-item">
+        <a href="{{ .RelPermalink }}">
+          <h2 class="post-title">{{ .Title }}</h2>
+          <div class="post-meta">
+            {{- with .Date -}}<time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>{{- end -}}
+            {{- with .Params.tags -}}
+              <span>
+                {{- range $index, $tag := . -}}
+                  {{- if gt $index 0 }}, {{ end -}}
+                  #{{ $tag }}
+                {{- end -}}
+              </span>
+            {{- end -}}
+          </div>
+          {{- with .Summary -}}
+          <p class="post-summary">{{ . }}</p>
+          {{- end -}}
+        </a>
+      </li>
+      {{- end -}}
+    </ul>
+    {{- partial "pagination.html" $paginator -}}
+  </section>
+  {{- else -}}
+  <p>还没有发布文章，使用 <code>hugo new posts/hello-world.md</code> 创建第一篇文章。</p>
+  {{- end -}}
+</main>
+{{- end -}}

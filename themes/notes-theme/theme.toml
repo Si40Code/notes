@@ -1,0 +1,12 @@
+name = "Notes Theme"
+license = "MIT"
+licenselink = "https://opensource.org/licenses/MIT"
+description = "Clean note-taking theme generated for personal blogging"
+homepage = "https://github.com/example/notes-theme"
+tags = ["minimal", "blog", "notes"]
+features = ["responsive", "pagination"]
+min_version = "0.92.0"
+
+[author]
+  name = "Your Name"
+  homepage = "https://example.com"

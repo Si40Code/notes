@@ -1,0 +1,7 @@
+<footer class="site-footer">
+  <div class="container">
+    <span>&copy; {{ now.Year }} {{ .Site.Title }}.</span>
+    {{ with .Site.Params.author }}<span> 写作：{{ . }}。</span>{{ end }}
+    <span> 由 Hugo 提供支持。</span>
+  </div>
+</footer>

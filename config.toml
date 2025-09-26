@@ -1,0 +1,9 @@
+baseURL = 'https://si40code.github.io/notes/'
+languageCode = 'zh-cn'
+title = 'Notes'
+theme = 'notes-theme'
+paginate = 10
+
+[params]
+  description = '记录随笔与学习笔记'
+  author = 'Your Name'
