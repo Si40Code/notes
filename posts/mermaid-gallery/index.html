@@ -1,0 +1,152 @@
+<!doctype html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Mermaid 图示全览 · Notes</title>
+<meta name=description content="收集常用的 Mermaid 语法，包括流程图、时序图、状态图、甘特图等，方便确认主题展示效果。">
+<meta name=author content="Your Name">
+<meta name=theme-color content="#6366f1"><meta property="og:type" content="article">
+<meta property="og:title" content="Mermaid 图示全览">
+<meta property="og:description" content="收集常用的 Mermaid 语法，包括流程图、时序图、状态图、甘特图等，方便确认主题展示效果。">
+<meta property="og:url" content="https://si40code.github.io/notes/posts/mermaid-gallery/">
+<link rel=canonical href=https://si40code.github.io/notes/posts/mermaid-gallery/>
+<meta name=generator content="Hugo 0.92.2">
+<link rel=stylesheet href=/notes/css/main.css>
+<link rel=stylesheet href=/notes/css/custom.css>
+</head>
+<body><header class=site-header>
+<div class="container header-inner">
+<div class=branding>
+<a href=/notes/>
+<span class=brand-title>Notes</span>
+</a>
+<span class=brand-tagline>记录随笔与学习笔记</span>
+</div>
+<nav class=site-nav>
+<ul>
+<li>
+<a href=/notes/>主页</a>
+</li>
+<li>
+<a href=/notes/posts/ class=active>文章</a>
+</li>
+<li>
+<a href=/notes/tags/>标签</a>
+</li>
+</ul>
+</nav>
+</div>
+</header>
+<div id=content><main class="container article-wrapper">
+<article class=post-detail><figure class=post-cover>
+<img src=https://si40code.github.io/notes/posts/mermaid-gallery/cover.jpg alt=数据可视化仪表盘屏幕 loading=lazy decoding=async>
+<figcaption>Mermaid 图示灵感墙</figcaption>
+</figure><h1>Mermaid 图示全览</h1>
+<div class=post-meta><time datetime=2025-09-27>2025-09-27</time><span>·</span>
+<span>2 分钟读完</span>
+<span class=tag-chip>#Mermaid</span>
+<span class=tag-chip>#可视化</span>
+<span class=tag-chip>#测试</span>
+</div><aside class=table-of-contents>
+<h2>目录</h2>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#流程图-flowchart>流程图 (Flowchart)</a></li>
+<li><a href=#时序图-sequence-diagram>时序图 (Sequence Diagram)</a></li>
+<li><a href=#状态图-state-diagram>状态图 (State Diagram)</a></li>
+<li><a href=#类图-class-diagram>类图 (Class Diagram)</a></li>
+<li><a href=#饼图-pie-chart>饼图 (Pie Chart)</a></li>
+<li><a href=#甘特图-gantt-chart>甘特图 (Gantt Chart)</a></li>
+<li><a href=#journey-图-journey-diagram>Journey 图 (Journey Diagram)</a></li>
+<li><a href=#结语>结语</a></li>
+</ul>
+</nav>
+</aside><div class=content>
+<p>Mermaid 支持多种图形语言，这篇文章快速罗列我最常用的几种类型，方便检查主题对代码块的渲染表现。</p>
+<h2 id=流程图-flowchart>流程图 (Flowchart)</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart LR
+    A[需求梳理] --&gt; B{是否可实现?}
+    B -- 是 --&gt; C[拆分任务]
+    B -- 否 --&gt; D[继续调研]
+    C --&gt; E[实现功能]
+    D --&gt; B
+    E --&gt; F{通过测试?}
+    F -- 是 --&gt; G[部署]
+    F -- 否 --&gt; C
+</code></pre><h2 id=时序图-sequence-diagram>时序图 (Sequence Diagram)</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>sequenceDiagram
+    participant U as User
+    participant S as Static Site
+    participant G as GitHub
+
+    U-&gt;&gt;S: 浏览首页
+    S--&gt;&gt;U: 返回最新文章列表
+    U-&gt;&gt;G: 触发 GitHub Actions
+    G--&gt;&gt;U: 通知构建结果
+</code></pre><h2 id=状态图-state-diagram>状态图 (State Diagram)</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>stateDiagram-v2
+    [*] --&gt; Draft
+    Draft --&gt; InReview: PR 已创建
+    InReview --&gt; ChangesRequested
+    ChangesRequested --&gt; InReview: 提交修订
+    InReview --&gt; Published: 合并主干
+    Published --&gt; Archived: 版本迭代
+</code></pre><h2 id=类图-class-diagram>类图 (Class Diagram)</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>classDiagram
+    class Article {
+      +string title
+      +string summary
+      +Date date
+      +render()
+    }
+
+    class BuildPipeline {
+      +run()
+      +deploy()
+    }
+
+    Article &lt;|-- MarkdownArticle
+    BuildPipeline o-- Article
+</code></pre><h2 id=饼图-pie-chart>饼图 (Pie Chart)</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>pie showData
+    title 一周写作时间占比
+    &quot;写作&quot; : 12
+    &quot;阅读&quot; : 8
+    &quot;调研&quot; : 6
+    &quot;复盘&quot; : 4
+</code></pre><h2 id=甘特图-gantt-chart>甘特图 (Gantt Chart)</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>gantt
+    dateFormat  YYYY-MM-DD
+    title 博客优化迭代计划
+    section 基础设施
+      初始化仓库      :done,    des1, 2025-09-20, 2025-09-21
+      Pages 自动部署  :active,  des2, 2025-09-22, 2d
+    section 主题美化
+      设计首页        :         des3, 2025-09-24, 1d
+      样式调优        :         des4, after des3, 2d
+      提交流程        :crit,    des5, after des4, 1d
+</code></pre><h2 id=journey-图-journey-diagram>Journey 图 (Journey Diagram)</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>journey
+    title 写博客的心情曲线
+    section 起步阶段
+      构思选题: 3: 灵感一般
+      收集素材: 2: 有点纠结
+    section 写作阶段
+      起草大纲: 4: 稍微顺畅
+      编写正文: 5: 进入状态
+      调整格式: 4: 保持节奏
+    section 发布阶段
+      推送仓库: 5: 稳定
+      Actions 部署: 4: 等待通过
+      分享链接: 5: 小兴奋
+</code></pre><h2 id=结语>结语</h2>
+<p>有了这份示例，就能快速确认主题对 Mermaid 图的支持效果。如果要隐藏或按需加载 Mermaid，也可以进一步通过 Hugo 管道进行优化。</p>
+</div>
+</article>
+</main>
+</div><footer class=site-footer>
+<div class=container>
+<span>&copy; 2025 Notes.</span>
+</div>
+</footer><script src=https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js crossorigin=anonymous></script>
+<script>(function(){var b=document.querySelectorAll('pre > code.language-mermaid'),c,g,f,e,a,h,i;if(!b.length||!window.mermaid)return;for(c=0;c<b.length;c++)g=b[c],f=g.parentNode,e=document.createElement('div'),e.className='mermaid',e.textContent=g.textContent,f.parentNode.replaceChild(e,f);a=window.matchMedia('(prefers-color-scheme: dark)'),h={primaryColor:'#eef2ff',primaryBorderColor:'#6366f1',primaryTextColor:'#1f2937',secondaryColor:'#ffffff',tertiaryColor:'#e0e7ff',lineColor:'#4f46e5',textColor:'#1f2937',fontSize:'16px',fontFamily:'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'},i={primaryColor:'#1e293b',primaryBorderColor:'#60a5fa',primaryTextColor:'#e2e8f0',secondaryColor:'#0f172a',tertiaryColor:'#1e3a8a',lineColor:'#93c5fd',textColor:'#e2e8f0',fontSize:'16px',fontFamily:'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'};function d(){var b=a.matches?i:h;window.mermaid.initialize({startOnLoad:!1,theme:'base',themeVariables:b,flowchart:{curve:'basis'},sequence:{diagramMarginX:12,diagramMarginY:16,actorMargin:40,messageMargin:32,showSequenceNumbers:!1},gantt:{barHeight:36,barGap:10,topPadding:60,sectionFontSize:18,axisFormat:'%m/%d'}}),window.mermaid.run({nodes:document.querySelectorAll('.mermaid')})}d(),a.addEventListener?a.addEventListener('change',d):a.addListener&&a.addListener(d)})()</script></body>
+</html>

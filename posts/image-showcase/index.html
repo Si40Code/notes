@@ -1,0 +1,84 @@
+<!doctype html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>本地图片使用示例 · Notes</title>
+<meta name=description content="演示如何在文章中引用自己下载的图片，包括封面、正文插图以及简单的图文布局。">
+<meta name=author content="Your Name">
+<meta name=theme-color content="#6366f1"><meta property="og:type" content="article">
+<meta property="og:title" content="本地图片使用示例">
+<meta property="og:description" content="演示如何在文章中引用自己下载的图片，包括封面、正文插图以及简单的图文布局。">
+<meta property="og:url" content="https://si40code.github.io/notes/posts/image-showcase/">
+<link rel=canonical href=https://si40code.github.io/notes/posts/image-showcase/>
+<meta name=generator content="Hugo 0.92.2">
+<link rel=stylesheet href=/notes/css/main.css>
+<link rel=stylesheet href=/notes/css/custom.css>
+</head>
+<body><header class=site-header>
+<div class="container header-inner">
+<div class=branding>
+<a href=/notes/>
+<span class=brand-title>Notes</span>
+</a>
+<span class=brand-tagline>记录随笔与学习笔记</span>
+</div>
+<nav class=site-nav>
+<ul>
+<li>
+<a href=/notes/>主页</a>
+</li>
+<li>
+<a href=/notes/posts/ class=active>文章</a>
+</li>
+<li>
+<a href=/notes/tags/>标签</a>
+</li>
+</ul>
+</nav>
+</div>
+</header>
+<div id=content><main class="container article-wrapper">
+<article class=post-detail><figure class=post-cover>
+<img src=https://si40code.github.io/notes/posts/image-showcase/workspace.jpg alt=木质桌面上的笔记本电脑与便签 loading=lazy decoding=async>
+<figcaption>写作时的工作台</figcaption>
+</figure><h1>本地图片使用示例</h1>
+<div class=post-meta><time datetime=2025-09-27>2025-09-27</time><span>·</span>
+<span>约 1 分钟读完</span>
+<span class=tag-chip>#写作流程</span>
+<span class=tag-chip>#素材管理</span>
+</div><aside class=table-of-contents>
+<h2>目录</h2>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#直接引用图片>直接引用图片</a></li>
+<li><a href=#图文混排>图文混排</a></li>
+<li><a href=#两张图片并排>两张图片并排</a></li>
+</ul>
+</nav>
+</aside><div class=content>
+<p>将文章改成 Leaf Bundle（目录 + <code>index.md</code>）后，就可以把截图和照片放在同一个文件夹里。这样引用资源时只需写文件名，Hugo 会自动处理路径。</p>
+<h2 id=直接引用图片>直接引用图片</h2>
+<p>最简单的方式是使用标准 Markdown 语法：</p>
+<p><img src=workspace.jpg alt=编辑环境截图></p>
+<h2 id=图文混排>图文混排</h2>
+<p>还可以用一点点 HTML 包装，让图片和文字排版更紧凑：</p>
+<figure class=image-note>
+<img src=code.jpg alt=终端里运行代码的屏幕>
+<figcaption>用于演示的终端截图，可以换成自己的调试画面。</figcaption>
+</figure>
+<h2 id=两张图片并排>两张图片并排</h2>
+<p>当需要对比两张截图时，可以利用一个小的 <code>&lt;div></code> 容器放两个 <code>&lt;img></code>：</p>
+<div class=image-grid>
+<img src=code.jpg alt=代码编辑器 loading=lazy>
+<img src=coffee.jpg alt=清晨咖啡与笔记本 loading=lazy>
+</div>
+<p>上面的示例都只用到文件名，因此把图片复制进文章目录后即可引用。如果想在其它文章复用同一张图，可以把文件放到 <code>static/images/</code>，引用时写绝对路径（例如 <code>/images/screenshot.png</code>）。</p>
+<p>写完后运行 <code>hugo server -D</code>，在浏览器里确认图片是否显示正确，同时检查体积和视觉效果是否满足预期。</p>
+</div>
+</article>
+</main>
+</div><footer class=site-footer>
+<div class=container>
+<span>&copy; 2025 Notes.</span>
+</div>
+</footer></body>
+</html>

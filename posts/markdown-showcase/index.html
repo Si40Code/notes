@@ -1,0 +1,201 @@
+<!doctype html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Markdown 样式全面测试 · Notes</title>
+<meta name=description content="用一篇文档覆盖常见 Markdown 语法，验证主题的排版与组件表现。">
+<meta name=author content="Your Name">
+<meta name=theme-color content="#6366f1"><meta property="og:type" content="article">
+<meta property="og:title" content="Markdown 样式全面测试">
+<meta property="og:description" content="用一篇文档覆盖常见 Markdown 语法，验证主题的排版与组件表现。">
+<meta property="og:url" content="https://si40code.github.io/notes/posts/markdown-showcase/">
+<link rel=canonical href=https://si40code.github.io/notes/posts/markdown-showcase/>
+<meta name=generator content="Hugo 0.92.2">
+<link rel=stylesheet href=/notes/css/main.css>
+<link rel=stylesheet href=/notes/css/custom.css>
+</head>
+<body><header class=site-header>
+<div class="container header-inner">
+<div class=branding>
+<a href=/notes/>
+<span class=brand-title>Notes</span>
+</a>
+<span class=brand-tagline>记录随笔与学习笔记</span>
+</div>
+<nav class=site-nav>
+<ul>
+<li>
+<a href=/notes/>主页</a>
+</li>
+<li>
+<a href=/notes/posts/ class=active>文章</a>
+</li>
+<li>
+<a href=/notes/tags/>标签</a>
+</li>
+</ul>
+</nav>
+</div>
+</header>
+<div id=content><main class="container article-wrapper">
+<article class=post-detail><figure class=post-cover>
+<img src=https://si40code.github.io/notes/posts/markdown-showcase/cover.jpg alt=桌面上摊开的笔记本和键盘 loading=lazy decoding=async>
+<figcaption>Markdown 语法练习</figcaption>
+</figure><h1>Markdown 样式全面测试</h1>
+<div class=post-meta><time datetime=2025-09-27>2025-09-27</time><span>·</span>
+<span>约 1 分钟读完</span>
+<span class=tag-chip>#Markdown</span>
+<span class=tag-chip>#测试</span>
+<span class=tag-chip>#样式</span>
+</div><aside class=table-of-contents>
+<h2>目录</h2>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#标题与文本排版>标题与文本排版</a>
+<ul>
+<li><a href=#文本强调>文本强调</a></li>
+<li><a href=#列表>列表</a></li>
+<li><a href=#提示块示例>提示块示例</a></li>
+</ul>
+</li>
+<li><a href=#表格与代码>表格与代码</a></li>
+<li><a href=#图片与链接>图片与链接</a></li>
+<li><a href=#代码块高亮>代码块高亮</a></li>
+<li><a href=#数学公式>数学公式</a></li>
+<li><a href=#mermaid-流程图>Mermaid 流程图</a></li>
+<li><a href=#代码-diff>代码 diff</a></li>
+<li><a href=#任务清单>任务清单</a></li>
+<li><a href=#定义列表>定义列表</a></li>
+<li><a href=#结束语>结束语</a></li>
+</ul>
+</nav>
+</aside><div class=content>
+<blockquote>
+<p>这是一篇演示文章，用来快速验证主题对各种 Markdown 语法的兼容性。</p>
+</blockquote>
+<h2 id=标题与文本排版>标题与文本排版</h2>
+<h3 id=文本强调>文本强调</h3>
+<p>普通段落可以包含 <strong>加粗</strong>、<em>斜体</em>、<code>行内代码</code> 以及<del>删除线</del>。你也可以插入脚注<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup> 来补充额外说明。</p>
+<h3 id=列表>列表</h3>
+<ul>
+<li>无序列表项一</li>
+<li>无序列表项二
+<ul>
+<li>嵌套列表</li>
+</ul>
+</li>
+<li>无序列表项三</li>
+</ul>
+<ol>
+<li>有序列表第一步</li>
+<li>有序列表第二步</li>
+<li>有序列表第三步</li>
+</ol>
+<h3 id=提示块示例>提示块示例</h3>
+<blockquote>
+<p><strong>Tip:</strong> 在 Hugo 中可以使用短代码或自定义组件进一步增强样式。</p>
+</blockquote>
+<h2 id=表格与代码>表格与代码</h2>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hugo</td>
+<td>快速的静态站点生成器</td>
+<td>使用 Go 编写</td>
+</tr>
+<tr>
+<td>GitHub Actions</td>
+<td>持续集成平台</td>
+<td>免费托管公开仓库</td>
+</tr>
+<tr>
+<td>Markdown</td>
+<td>轻量级标记语言</td>
+<td>和 IDE 配合良好</td>
+</tr>
+</tbody>
+</table>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e># 执行 hugo 本地构建</span>
+hugo server --buildDrafts
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;fmt&#34;</span>
+
+<span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Hello Markdown Showcase&#34;</span>)
+}
+</code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json>{
+  <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;notes&#34;</span>,
+  <span style=color:#f92672>&#34;version&#34;</span>: <span style=color:#e6db74>&#34;1.0.0&#34;</span>,
+  <span style=color:#f92672>&#34;scripts&#34;</span>: {
+    <span style=color:#f92672>&#34;build&#34;</span>: <span style=color:#e6db74>&#34;hugo&#34;</span>
+  }
+}
+</code></pre></div><h2 id=图片与链接>图片与链接</h2>
+<p><img src=city-night.jpg alt=夜色中的城市></p>
+<ul>
+<li>站内链接示例：<a href=/posts/hello-world/>第一篇文章</a></li>
+<li>站外链接示例：<a href=https://gohugo.io/>Hugo 官方文档</a></li>
+</ul>
+<h2 id=代码块高亮>代码块高亮</h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#f92672>from</span> pathlib <span style=color:#f92672>import</span> Path
+
+posts <span style=color:#f92672>=</span> sorted(Path(<span style=color:#e6db74>&#34;content/posts&#34;</span>)<span style=color:#f92672>.</span>glob(<span style=color:#e6db74>&#34;*.md&#34;</span>))
+<span style=color:#66d9ef>for</span> post <span style=color:#f92672>in</span> posts:
+    print(post<span style=color:#f92672>.</span>name)
+</code></pre></div><h2 id=数学公式>数学公式</h2>
+<p>行内表达式示例：$E=mc^2$。</p>
+<p>块级公式示例：</p>
+<p>$$
+\int_{a}^{b} f(x) , dx = F(b) - F(a)
+$$</p>
+<h2 id=mermaid-流程图>Mermaid 流程图</h2>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TD
+    A[开始] --&gt; B{是否需要构建?}
+    B -- 是 --&gt; C[执行 hugo --minify]
+    B -- 否 --&gt; D[继续写作]
+    C --&gt; E[推送到 GitHub]
+    D --&gt; E
+    E --&gt; F[Actions 自动部署]
+</code></pre><h2 id=代码-diff>代码 diff</h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-diff data-lang=diff><span style=color:#f92672>- baseURL = &#34;https://example.com&#34;
+</span><span style=color:#f92672></span><span style=color:#a6e22e>+ baseURL = &#34;https://si40code.github.io/notes/&#34;
+</span></code></pre></div><h2 id=任务清单>任务清单</h2>
+<ul>
+<li><input checked disabled type=checkbox> 准备新主题</li>
+<li><input checked disabled type=checkbox> 配置 GitHub Actions</li>
+<li><input disabled type=checkbox> 撰写更多文章</li>
+</ul>
+<h2 id=定义列表>定义列表</h2>
+<dl>
+<dt>Hugo</dt>
+<dd>使用 Go 构建的静态网站生成器。</dd>
+<dt>GitHub Pages</dt>
+<dd>GitHub 提供的静态站点托管服务，适合博客或项目文档。</dd>
+</dl>
+<h2 id=结束语>结束语</h2>
+<p>以上示例涵盖了常见的 Markdown 写法。可以根据页面渲染效果进一步调整主题样式，让每种内容都具备清晰的可读性。</p>
+<section class=footnotes role=doc-endnotes>
+<hr>
+<ol>
+<li id=fn:1 role=doc-endnote>
+<p>脚注示例，这里可以放一些补充说明。&#160;<a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+</div>
+</article>
+</main>
+</div><footer class=site-footer>
+<div class=container>
+<span>&copy; 2025 Notes.</span>
+</div>
+</footer><script src=https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js crossorigin=anonymous></script>
+<script>(function(){var b=document.querySelectorAll('pre > code.language-mermaid'),c,g,f,e,a,h,i;if(!b.length||!window.mermaid)return;for(c=0;c<b.length;c++)g=b[c],f=g.parentNode,e=document.createElement('div'),e.className='mermaid',e.textContent=g.textContent,f.parentNode.replaceChild(e,f);a=window.matchMedia('(prefers-color-scheme: dark)'),h={primaryColor:'#eef2ff',primaryBorderColor:'#6366f1',primaryTextColor:'#1f2937',secondaryColor:'#ffffff',tertiaryColor:'#e0e7ff',lineColor:'#4f46e5',textColor:'#1f2937',fontSize:'16px',fontFamily:'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'},i={primaryColor:'#1e293b',primaryBorderColor:'#60a5fa',primaryTextColor:'#e2e8f0',secondaryColor:'#0f172a',tertiaryColor:'#1e3a8a',lineColor:'#93c5fd',textColor:'#e2e8f0',fontSize:'16px',fontFamily:'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'};function d(){var b=a.matches?i:h;window.mermaid.initialize({startOnLoad:!1,theme:'base',themeVariables:b,flowchart:{curve:'basis'},sequence:{diagramMarginX:12,diagramMarginY:16,actorMargin:40,messageMargin:32,showSequenceNumbers:!1},gantt:{barHeight:36,barGap:10,topPadding:60,sectionFontSize:18,axisFormat:'%m/%d'}}),window.mermaid.run({nodes:document.querySelectorAll('.mermaid')})}d(),a.addEventListener?a.addEventListener('change',d):a.addListener&&a.addListener(d)})()</script></body>
+</html>
