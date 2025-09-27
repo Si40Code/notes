@@ -1,6 +1,29 @@
 {{- define "main" -}}
 <main class="container article-wrapper">
   <article class="post-detail">
+    {{- $coverParam := .Params.cover -}}
+    {{- $coverSrc := "" -}}
+    {{- if $coverParam -}}
+      {{- $coverResource := false -}}
+      {{- if not (hasPrefix (printf "%v" $coverParam) "http") -}}
+        {{- $coverResource = .Resources.GetMatch (printf "%v" $coverParam) -}}
+      {{- end -}}
+      {{- if $coverResource -}}
+        {{- $coverSrc = $coverResource.RelPermalink -}}
+      {{- else -}}
+        {{- $coverSrc = (printf "%v" $coverParam) -}}
+      {{- end -}}
+    {{- end -}}
+    {{- $coverAlt := default .Title (.Params.cover_alt | default .Params.coverAlt) -}}
+    {{- $coverCaption := .Params.cover_caption | default .Params.coverCaption -}}
+    {{- if $coverSrc -}}
+    <figure class="post-cover">
+      <img src="{{ $coverSrc | absURL }}" alt="{{ $coverAlt }}" loading="lazy" decoding="async">
+      {{- with $coverCaption }}
+      <figcaption>{{ . }}</figcaption>
+      {{- end }}
+    </figure>
+    {{- end -}}
     <h1>{{ .Title }}</h1>
     <div class="post-meta">
       {{- with .Date -}}

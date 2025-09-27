@@ -1,0 +1,37 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>
+    {{- if .IsHome -}}
+      {{- .Site.Title -}}
+      {{- with .Site.Params.description -}} · {{ . }}{{- end -}}
+    {{- else -}}
+      {{- .Title }} · {{ .Site.Title -}}
+    {{- end -}}
+  </title>
+  {{- $description := cond (and (not .IsHome) (isset .Params "summary")) (.Params.summary) (.Site.Params.description) -}}
+  {{- with $description }}
+  <meta name="description" content="{{ . }}">
+  {{- end }}
+  {{- with .Site.Params.author }}
+  <meta name="author" content="{{ . }}">
+  {{- end }}
+  <meta name="theme-color" content="#6366f1">
+  {{- if .IsHome -}}
+  <meta property="og:type" content="website">
+  {{- else -}}
+  <meta property="og:type" content="article">
+  {{- end }}
+  <meta property="og:title" content="{{ .Title }}">
+  {{- with $description }}
+  <meta property="og:description" content="{{ . }}">
+  {{- end }}
+  <meta property="og:url" content="{{ .Permalink }}">
+  <link rel="canonical" href="{{ .Permalink }}">
+  {{ hugo.Generator }}
+  <link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
+  {{- range .AlternativeOutputFormats }}
+    <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}">
+  {{- end }}
+</head>

@@ -14,8 +14,18 @@
       <ul>
         {{ range . }}
         {{ $isActive := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) }}
+        {{ $href := "" }}
+        {{ with .Page }}
+          {{ $href = .RelPermalink }}
+        {{ else }}
+          {{ if or (hasPrefix .URL "http://") (hasPrefix .URL "https://") }}
+            {{ $href = .URL }}
+          {{ else }}
+            {{ $href = .URL | relLangURL }}
+          {{ end }}
+        {{ end }}
         <li>
-          <a href="{{ .URL | relLangURL }}" class="{{ if $isActive }}active{{ end }}">{{ .Name }}</a>
+          <a href="{{ $href }}" class="{{ if $isActive }}active{{ end }}">{{ .Name }}</a>
         </li>
         {{ end }}
       </ul>

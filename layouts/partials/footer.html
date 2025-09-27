@@ -1,0 +1,92 @@
+<footer class="site-footer">
+  <div class="container">
+    <span>&copy; {{ now.Year }} {{ .Site.Title }}.</span>
+    <!-- {{ with .Site.Params.author }}<span> 写作：{{ . }}。</span>{{ end }} -->
+  </div>
+</footer>
+{{- if .IsPage -}}
+  {{- $mermaidBlocks := findRE "```\\s*mermaid" .RawContent -}}
+  {{- if gt (len $mermaidBlocks) 0 -}}
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" crossorigin="anonymous"></script>
+<script>
+  (function () {
+    var blocks = document.querySelectorAll('pre > code.language-mermaid');
+    if (!blocks.length || !window.mermaid) {
+      return;
+    }
+
+    for (var i = 0; i < blocks.length; i++) {
+      var block = blocks[i];
+      var pre = block.parentNode;
+      var container = document.createElement('div');
+      container.className = 'mermaid';
+      container.textContent = block.textContent;
+      pre.parentNode.replaceChild(container, pre);
+    }
+
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    var lightTheme = {
+      primaryColor: '#eef2ff',
+      primaryBorderColor: '#6366f1',
+      primaryTextColor: '#1f2937',
+      secondaryColor: '#ffffff',
+      tertiaryColor: '#e0e7ff',
+      lineColor: '#4f46e5',
+      textColor: '#1f2937',
+      fontSize: '16px',
+      fontFamily: 'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    };
+
+    var darkTheme = {
+      primaryColor: '#1e293b',
+      primaryBorderColor: '#60a5fa',
+      primaryTextColor: '#e2e8f0',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#1e3a8a',
+      lineColor: '#93c5fd',
+      textColor: '#e2e8f0',
+      fontSize: '16px',
+      fontFamily: 'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'
+    };
+
+    function renderMermaid() {
+      var themeVariables = prefersDark.matches ? darkTheme : lightTheme;
+
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        themeVariables: themeVariables,
+        flowchart: {
+          curve: 'basis'
+        },
+        sequence: {
+          diagramMarginX: 12,
+          diagramMarginY: 16,
+          actorMargin: 40,
+          messageMargin: 32,
+          showSequenceNumbers: false
+        },
+        gantt: {
+          barHeight: 36,
+          barGap: 10,
+          topPadding: 60,
+          sectionFontSize: 18,
+          axisFormat: '%m/%d'
+        }
+      });
+
+      window.mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+    }
+
+    renderMermaid();
+
+    if (prefersDark.addEventListener) {
+      prefersDark.addEventListener('change', renderMermaid);
+    } else if (prefersDark.addListener) {
+      prefersDark.addListener(renderMermaid);
+    }
+  })();
+</script>
+  {{- end -}}
+{{- end -}}

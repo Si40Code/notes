@@ -12,6 +12,25 @@
       {{- range .Paginator.Pages -}}
       <article class="post-card">
         <a href="{{ .RelPermalink }}">
+          {{- $coverParam := .Params.cover -}}
+          {{- $coverSrc := "" -}}
+          {{- if $coverParam -}}
+            {{- $coverResource := false -}}
+            {{- if not (hasPrefix (printf "%v" $coverParam) "http") -}}
+              {{- $coverResource = .Resources.GetMatch (printf "%v" $coverParam) -}}
+            {{- end -}}
+            {{- if $coverResource -}}
+              {{- $coverSrc = $coverResource.RelPermalink -}}
+            {{- else -}}
+              {{- $coverSrc = (printf "%v" $coverParam) -}}
+            {{- end -}}
+          {{- end -}}
+          {{- if $coverSrc -}}
+          <figure class="post-card-cover">
+            <img src="{{ $coverSrc | absURL }}" alt="{{ default .Title (.Params.cover_alt | default .Params.coverAlt) }}" loading="lazy" decoding="async">
+          </figure>
+          {{- end -}}
+          <div class="post-card-content">
           <div class="post-card-meta">
             {{- with .Date -}}
             <time datetime="{{ .Format "2006-01-02" }}">{{ .Format "2006-01-02" }}</time>
@@ -33,6 +52,7 @@
             {{- end -}}
           </ul>
           {{- end -}}
+          </div>
         </a>
       </article>
       {{- end -}}

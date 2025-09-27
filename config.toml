@@ -34,19 +34,24 @@ paginate = 10
 [menu]
   [[menu.main]]
     name = '主页'
-    url = '/'
+    pageRef = '/'
     weight = 1
 
   [[menu.main]]
     name = '文章'
-    url = '/posts/'
+    pageRef = '/posts'
     weight = 2
 
   [[menu.main]]
     name = '标签'
-    url = '/tags/'
+    pageRef = '/tags'
     weight = 3
 
 [taxonomies]
   tag = 'tags'
   category = 'categories'
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
