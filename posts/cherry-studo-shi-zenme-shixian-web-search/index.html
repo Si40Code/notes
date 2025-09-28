@@ -1,0 +1,151 @@
+<!doctype html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Cherry-Studio是怎么实现Web Search的?源码解析 · Notes</title>
+<meta name=description content="梳理 Cherry Studio 的 Web Search 调用链：从交互触发、意图分析到隐藏浏览器抓取与引用呈现的完整实现。">
+<meta name=author content="Your Name">
+<meta name=theme-color content="#6366f1"><meta property="og:type" content="article">
+<meta property="og:title" content="Cherry-Studio是怎么实现Web Search的?源码解析">
+<meta property="og:description" content="梳理 Cherry Studio 的 Web Search 调用链：从交互触发、意图分析到隐藏浏览器抓取与引用呈现的完整实现。">
+<meta property="og:url" content="https://si40code.github.io/notes/posts/cherry-studo-shi-zenme-shixian-web-search/">
+<link rel=canonical href=https://si40code.github.io/notes/posts/cherry-studo-shi-zenme-shixian-web-search/>
+<meta name=generator content="Hugo 0.92.2">
+<link rel=stylesheet href=/notes/css/main.css>
+<link rel=stylesheet href=/notes/css/custom.css>
+</head>
+<body><header class=site-header>
+<div class="container header-inner">
+<div class=branding>
+<a href=/notes/>
+<span class=brand-title>Notes</span>
+</a>
+<span class=brand-tagline>记录随笔与学习笔记</span>
+</div>
+<nav class=site-nav>
+<ul>
+<li>
+<a href=/notes/>主页</a>
+</li>
+<li>
+<a href=/notes/posts/ class=active>文章</a>
+</li>
+<li>
+<a href=/notes/tags/>标签</a>
+</li>
+</ul>
+</nav>
+</div>
+</header>
+<div id=content><main class="container article-wrapper">
+<article class=post-detail><figure class=post-cover>
+<img src=https://si40code.github.io/notes/posts/cherry-studo-shi-zenme-shixian-web-search/cover.png alt="Cherry-Studio是怎么实现Web Search的?源码解析" loading=lazy decoding=async>
+</figure><h1>Cherry-Studio是怎么实现Web Search的?源码解析</h1>
+<div class=post-meta><time datetime=2025-09-28>2025-09-28</time><span>·</span>
+<span>2 分钟读完</span>
+<span class=tag-chip>#Agent</span>
+<span class=tag-chip>#Cherry Studio</span>
+<span class=tag-chip>#源码解析</span>
+</div><aside class=table-of-contents>
+<h2>目录</h2>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#概览>概览</a></li>
+<li><a href=#流程速览>流程速览</a>
+<ul>
+<li><a href=#1-触发开关>1. 触发开关</a></li>
+<li><a href=#2-意图分析>2. 意图分析</a></li>
+<li><a href=#3-工具注入>3. 工具注入</a></li>
+<li><a href=#4-工具执行>4. 工具执行</a></li>
+<li><a href=#5-主进程抓取>5. 主进程抓取</a></li>
+<li><a href=#6-结果压缩与状态同步>6. 结果压缩与状态同步</a></li>
+<li><a href=#7-citation-block-呈现>7. Citation Block 呈现</a></li>
+</ul>
+</li>
+<li><a href=#隐形浏览器的意义>隐形浏览器的意义</a></li>
+</ul>
+</nav>
+</aside><div class=content>
+<h2 id=概览>概览</h2>
+<p><a href=https://www.cherry-ai.com/>cherry-studio官网</a></p>
+<p>最近在做 agent 的，在调研 web search 的功能的时候。发现 cherry-studio 有免费的网络搜索功能，因为一般 agent 的网络搜索一般需要用第三方的搜索 api。想看看他们是怎么实现的。</p>
+<div class=image-grid>
+<img src=web-search-tool.png alt=网络搜索 loading=lazy>
+<img src=featch-content.png alt=搜索结果 loading=lazy>
+</div>
+<p>一句话总结:Cherry-Studio 本身是一个 web 应用，网络搜索会在后台打开浏览器去访问 google/bing/baidu 搜索关键词。然后逐个打开前 n 个搜索结果。提取压缩内容后，交给 llm。</p>
+<p>具体源码分析在下面</p>
+<h2 id=流程速览>流程速览</h2>
+<p>Cherry Studio 的 Web Search 并非一次简单的 API 调用，而是跨越前端、渲染进程和主进程的一条流水线。下面把这条链路拆开，方便在调试或扩展搜索 provider 时快速定位。</p>
+<pre tabindex=0><code class=language-mermaid data-lang=mermaid>flowchart TD
+    UA[用户点亮 Web Search] --&gt; IA[search-orchestration 插件分析意图]
+    IA --&gt; TI[在本轮请求注入 builtin_web_search 工具]
+    TI --&gt; TE[工具执行: WebSearchTool]
+    TE --&gt; HP[主进程隐藏 BrowserWindow 抓取]
+    HP --&gt; RC[结果压缩与状态同步]
+    RC --&gt; CB[Citation Block 输出]
+</code></pre><p>每个阶段都依靠 <code>requestId</code> 传递上下文，确保同一轮对话可能触发的多次搜索可以并发执行且状态可追踪。</p>
+<h3 id=1-触发开关>1. 触发开关</h3>
+<ul>
+<li>输入框右侧的地球按钮由 <code>WebSearchButton</code> 控制，点击后把选定 provider 写入助手配置，并把 <code>assistant.enableBuiltinSearch</code> 标记为 <code>false</code>，对应 <code>src/renderer/src/pages/home/Inputbar/WebSearchButton.tsx:75</code>。</li>
+<li>Redux 中的 assistant 状态此时带有 <code>webSearchProviderId</code>，后续流水线都以它作为搜索渠道依据。</li>
+</ul>
+<h3 id=2-意图分析>2. 意图分析</h3>
+<ul>
+<li>搜索编排插件 <code>search-orchestration</code> 被注册为强制最先执行的插件，入口位于 <code>src/renderer/src/aiCore/plugins/searchOrchestrationPlugin.ts:243</code>。</li>
+<li>在 <code>onRequestStart</code> 钩子里，插件检测 <code>assistant.webSearchProviderId</code> 是否存在，若存在则调用 <code>analyzeSearchIntent</code>，把用户最新一句消息和上一轮回复交给模型判断“是否要搜”“搜索哪些关键词”“是否需要附带摘要链接”。实现见 <code>.../searchOrchestrationPlugin.ts:249</code> 与 <code>:72</code>。</li>
+<li>分析结果会缓存到 <code>intentAnalysisResults[requestId]</code> 中，并记录原始用户输入供知识库或记忆工具复用。</li>
+</ul>
+<h3 id=3-工具注入>3. 工具注入</h3>
+<ul>
+<li><code>transformParams</code> 钩子在生成最终请求参数前再次被触发，如果缓存里判定需要外部搜索，就把 <code>builtin_web_search</code> 加入本次 AI 请求的工具列表，参见 <code>.../searchOrchestrationPlugin.ts:315</code>。</li>
+<li>注入同时携带：当前 provider、模型给出的搜索关键词或链接、<code>requestId</code>，用于后续状态追踪。</li>
+</ul>
+<h3 id=4-工具执行>4. 工具执行</h3>
+<ul>
+<li>当模型决定调用 <code>builtin_web_search</code> 时，会执行 <code>webSearchToolWithPreExtractedKeywords.execute</code>（<code>src/renderer/src/aiCore/tools/WebSearchTool.ts:42</code>）。</li>
+<li>工具把上下文和候选关键词整理成 <code>ExtractResults</code> 结构，然后调用核心服务 <code>WebSearchService.processWebsearch</code>，把 <code>requestId</code> 继续向下传递。</li>
+</ul>
+<h3 id=5-主进程抓取>5. 主进程抓取</h3>
+<ul>
+<li><code>processWebsearch</code> 先通过 <code>setWebSearchStatus</code> 把 UI 状态重置为 <code>default</code>，随后委托 <code>WebSearchEngineProvider</code> 选择 provider 的 <code>search</code> 方法，入口在 <code>src/renderer/src/services/WebSearchService.ts:166</code>。</li>
+<li>本地 Google/Bing/百度等 provider 由 <code>LocalSearchProvider.search</code> 实现（<code>.../LocalSearchProvider.ts:27</code>）：
+<ul>
+<li>拼接查询 URL，附加语言、日期等修饰符；</li>
+<li>通过 <code>window.api.searchService.openUrlInSearchWindow</code> 把 URL 发送给主进程；</li>
+<li>等待 Promise 返回完整 HTML，再用 provider 子类的 DOM 选择器解析结果链接；</li>
+<li>并发抓取各链接正文（可能再次走主进程或直接 <code>fetch</code>），并用 Readability/Turndown 转为 Markdown。</li>
+</ul>
+</li>
+<li>主进程 <code>SearchService</code> 负责“隐形浏览器”：<code>createNewSearchWindow</code> 新建隐藏 <code>BrowserWindow</code> 并伪装 UA；<code>openUrlInSearchWindow</code> 复用窗口加载页面、监听 <code>did-finish-load</code>，最后执行 <code>document.documentElement.outerHTML</code> 获取 HTML（<code>src/main/services/SearchService.ts:21</code>）。</li>
+<li>抓取收尾后，工具的 <code>finally</code> 会调用 <code>window.api.searchService.closeSearchWindow(uid)</code> 释放隐藏窗口，避免资源泄漏。</li>
+</ul>
+<h3 id=6-结果压缩与状态同步>6. 结果压缩与状态同步</h3>
+<ul>
+<li><code>processWebsearch</code> 汇总成功结果到 <code>finalResults</code>，失败则抛出异常交给上层处理。</li>
+<li>若配置了截断或 RAG 压缩（<code>websearch.compressionConfig</code>），会在 <code>src/renderer/src/services/WebSearchService.ts:437</code> 起裁剪文本，并持续更新 UI 状态（阶段值如 <code>rag</code>、<code>cutoff</code> 等）。</li>
+<li>最终返回 <code>WebSearchProviderResponse</code>，包含 <code>query</code> 及 <code>results</code> 列表。</li>
+</ul>
+<h3 id=7-citation-block-呈现>7. Citation Block 呈现</h3>
+<ul>
+<li>工具完成后，流式回调 <code>toolCallbacks.onToolCallComplete</code> 把 <code>toolResponse.response</code> 填回消息块。</li>
+<li>对于 <code>builtin_web_search</code>，系统会自动创建 Citation Block，把搜索到的 URL、标题、摘要组织成引用列表，参见 <code>src/renderer/src/services/messageStreaming/callbacks/toolCallbacks.ts:87</code>。</li>
+<li>对话面板最终展示的 “参考链接 [1][2] …” 即由该 Citation Block 渲染而来。</li>
+</ul>
+<h2 id=隐形浏览器的意义>隐形浏览器的意义</h2>
+<p>隐藏的 <code>BrowserWindow</code> 能加载 Google/Bing/百度等未开放 API 的真实页面，从而让渲染进程拿到完整 HTML。前端再借助 DOM 解析与 Markdown 转换完成信息抽取，并在回复里引用。整个链路依靠 <code>requestId</code> 贯穿：</p>
+<ul>
+<li>多条搜索请求可并发但互不干扰；</li>
+<li>UI 能实时显示“正在抓取”“压缩失败”等状态；</li>
+<li>Citation Block 能在第一时间匹配结果来源。</li>
+</ul>
+<p>开启 Web Search 后，每条消息都会自动经历：意图分析 → 工具注入 → 工具执行 → 主进程抓取 → 结果压缩 → Citation 呈现。真正访问外部网页的，正是那扇主进程里永远不见光的隐藏浏览器窗口。</p>
+</div>
+</article>
+</main>
+</div><footer class=site-footer>
+<div class=container>
+<span>&copy; 2025 Notes.</span>
+</div>
+</footer><script src=https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js crossorigin=anonymous></script>
+<script>(function(){var b=document.querySelectorAll('pre > code.language-mermaid'),c,g,f,e,a,h,i;if(!b.length||!window.mermaid)return;for(c=0;c<b.length;c++)g=b[c],f=g.parentNode,e=document.createElement('div'),e.className='mermaid',e.textContent=g.textContent,f.parentNode.replaceChild(e,f);a=window.matchMedia('(prefers-color-scheme: dark)'),h={primaryColor:'#eef2ff',primaryBorderColor:'#6366f1',primaryTextColor:'#1f2937',secondaryColor:'#ffffff',tertiaryColor:'#e0e7ff',lineColor:'#4f46e5',textColor:'#1f2937',fontSize:'16px',fontFamily:'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'},i={primaryColor:'#1e293b',primaryBorderColor:'#60a5fa',primaryTextColor:'#e2e8f0',secondaryColor:'#0f172a',tertiaryColor:'#1e3a8a',lineColor:'#93c5fd',textColor:'#e2e8f0',fontSize:'16px',fontFamily:'Inter, "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif'};function d(){var b=a.matches?i:h;window.mermaid.initialize({startOnLoad:!1,theme:'base',themeVariables:b,flowchart:{curve:'basis'},sequence:{diagramMarginX:12,diagramMarginY:16,actorMargin:40,messageMargin:32,showSequenceNumbers:!1},gantt:{barHeight:36,barGap:10,topPadding:60,sectionFontSize:18,axisFormat:'%m/%d'}}),window.mermaid.run({nodes:document.querySelectorAll('.mermaid')})}d(),a.addEventListener?a.addEventListener('change',d):a.addListener&&a.addListener(d)})()</script><script>(function(){var e=document.querySelectorAll('.image-grid img'),a,c,b,d,i,g;if(!e.length)return;a=document.createElement('div'),a.className='image-lightbox',a.setAttribute('role','dialog'),a.setAttribute('aria-modal','true'),a.setAttribute('aria-hidden','true'),c=document.createElement('img'),c.className='image-lightbox__img',a.appendChild(c),b=document.createElement('button'),b.type='button',b.className='image-lightbox__close',b.setAttribute('aria-label','关闭图片'),b.innerHTML='&times;',a.appendChild(b),d=null;function f(){if(!a.classList.contains('is-open'))return;a.classList.remove('is-open'),a.setAttribute('aria-hidden','true'),c.removeAttribute('src'),d&&(d.focus({preventScroll:!0}),d=null)}function h(e,f,g){c.src=e,c.alt=f||'',a.classList.add('is-open'),a.setAttribute('aria-hidden','false'),d=g,b.focus({preventScroll:!0})}b.addEventListener('click',function(a){a.stopPropagation(),f()}),a.addEventListener('click',function(b){b.target===a&&f()}),document.addEventListener('keydown',function(a){a.key==='Escape'&&f()}),document.body.appendChild(a),i=function(a){a.setAttribute('tabindex','0'),a.setAttribute('role','button'),a.getAttribute('aria-label')||a.setAttribute('aria-label','点击放大图片'),a.addEventListener('click',function(b){var a=b.currentTarget;h(a.currentSrc||a.src,a.alt,a)}),a.addEventListener('keydown',function(a){if(a.key==='Enter'||a.key===' '){a.preventDefault();var b=a.currentTarget;h(b.currentSrc||b.src,b.alt,b)}})};for(g=0;g<e.length;g++)i(e[g])})()</script></body>
+</html>
