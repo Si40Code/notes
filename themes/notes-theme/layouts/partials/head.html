@@ -16,7 +16,26 @@
   {{- with .Site.Params.author }}
   <meta name="author" content="{{ . }}">
   {{- end }}
+  {{- with .Site.Params.keywords }}
+  <meta name="keywords" content="{{ delimit . ", " }}">
+  {{- end }}
   <meta name="theme-color" content="#6366f1">
+  
+  {{- /* Google Search Console验证 */ -}}
+  {{- with .Site.Params.seo.googleSiteVerification }}
+  <meta name="google-site-verification" content="{{ . }}">
+  {{- end }}
+  
+  {{- /* Google Analytics */ -}}
+  {{- with .Site.Params.seo.googleAnalytics }}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ . }}');
+  </script>
+  {{- end }}
   {{- if .IsHome -}}
   <meta property="og:type" content="website">
   {{- else -}}

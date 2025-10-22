@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://si40code.github.io/notes/sitemap.xml

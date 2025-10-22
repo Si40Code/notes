@@ -4,54 +4,16 @@ title = 'Notes'
 theme = 'notes-theme'
 paginate = 10
 
+# SEO配置
+enableRobotsTXT = true
+enableGitInfo = true
+
 [params]
   description = '记录随笔与学习笔记'
-  author = 'Your Name'
-  latest_summary = '从最近的创作开始，挑一篇感兴趣的文章读起。'
-  highlights = [
-    '记录日常灵感与问题解决',
-    '整理工具链与效率方法',
-    '分享对开源项目的理解'
-  ]
-
-  [params.hero]
-    kicker = '笔记与分享'
-    title = '让思考沉淀，让灵感发光'
-    subtitle = '记录学习、实验与灵感，让知识的碎片汇聚成系统。'
-    primary_label = '开始阅读'
-    primary_url = '/posts/'
-    secondary_label = '浏览标签'
-    secondary_url = '/tags/'
-
-[[params.social]]
-  name = 'GitHub'
-  url = 'https://github.com/Si40Code'
-
-[[params.social]]
-  name = 'RSS'
-  url = '/index.xml'
-
-[menu]
-  [[menu.main]]
-    name = '主页'
-    pageRef = '/'
-    weight = 1
-
-  [[menu.main]]
-    name = '文章'
-    pageRef = '/posts'
-    weight = 2
-
-  [[menu.main]]
-    name = '标签'
-    pageRef = '/tags'
-    weight = 3
-
-[taxonomies]
-  tag = 'tags'
-  category = 'categories'
-
-[markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
+  author = 'Si40Code'
+  keywords = ['博客', '笔记', '技术', '学习', '随笔']
+  
+  # SEO相关
+  [params.seo]
+    googleAnalytics = ""  # 如果需要可以添加GA ID
+    googleSiteVerification = ""  # Google Search Console验证码

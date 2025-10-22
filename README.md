@@ -33,3 +33,8 @@ hugo
 - `static/`：静态资源（图片、附件等）。
 
 欢迎持续补充与调整配置，让博客更贴合自己的写作习惯。
+
+
+## GitHub Page 地址
+
+https://si40code.github.io/notes/
