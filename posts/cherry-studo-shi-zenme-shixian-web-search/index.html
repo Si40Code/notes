@@ -3,7 +3,7 @@
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>Cherry-Studio是怎么实现Web Search的?源码解析 · Notes</title>
 <meta name=description content="梳理 Cherry Studio 的 Web Search 调用链：从交互触发、意图分析到隐藏浏览器抓取与引用呈现的完整实现。">
-<meta name=author content="Your Name">
+<meta name=author content="Si40Code">
 <meta name=theme-color content="#6366f1"><meta property="og:type" content="article">
 <meta property="og:title" content="Cherry-Studio是怎么实现Web Search的?源码解析">
 <meta property="og:description" content="梳理 Cherry Studio 的 Web Search 调用链：从交互触发、意图分析到隐藏浏览器抓取与引用呈现的完整实现。">
@@ -21,19 +21,6 @@
 </a>
 <span class=brand-tagline>记录随笔与学习笔记</span>
 </div>
-<nav class=site-nav>
-<ul>
-<li>
-<a href=/notes/>主页</a>
-</li>
-<li>
-<a href=/notes/posts/ class=active>文章</a>
-</li>
-<li>
-<a href=/notes/tags/>标签</a>
-</li>
-</ul>
-</nav>
 </div>
 </header>
 <div id=content><main class="container article-wrapper">
@@ -68,10 +55,6 @@
 <h2 id=概览>概览</h2>
 <p><a href=https://www.cherry-ai.com/>cherry-studio官网</a></p>
 <p>最近在做 agent 的，在调研 web search 的功能的时候。发现 cherry-studio 有免费的网络搜索功能，因为一般 agent 的网络搜索一般需要用第三方的搜索 api。想看看他们是怎么实现的。</p>
-<div class=image-grid>
-<img src=web-search-tool.png alt=网络搜索 loading=lazy>
-<img src=featch-content.png alt=搜索结果 loading=lazy>
-</div>
 <p>一句话总结:Cherry-Studio 本身是一个 web 应用，网络搜索会在后台打开浏览器去访问 google/bing/baidu 搜索关键词。然后逐个打开前 n 个搜索结果。提取压缩内容后，交给 llm。</p>
 <p>具体源码分析在下面</p>
 <h2 id=流程速览>流程速览</h2>

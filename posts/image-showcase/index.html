@@ -3,7 +3,7 @@
 <meta name=viewport content="width=device-width,initial-scale=1">
 <title>本地图片使用示例 · Notes</title>
 <meta name=description content="演示如何在文章中引用自己下载的图片，包括封面、正文插图以及简单的图文布局。">
-<meta name=author content="Your Name">
+<meta name=author content="Si40Code">
 <meta name=theme-color content="#6366f1"><meta property="og:type" content="article">
 <meta property="og:title" content="本地图片使用示例">
 <meta property="og:description" content="演示如何在文章中引用自己下载的图片，包括封面、正文插图以及简单的图文布局。">
@@ -21,19 +21,6 @@
 </a>
 <span class=brand-tagline>记录随笔与学习笔记</span>
 </div>
-<nav class=site-nav>
-<ul>
-<li>
-<a href=/notes/>主页</a>
-</li>
-<li>
-<a href=/notes/posts/ class=active>文章</a>
-</li>
-<li>
-<a href=/notes/tags/>标签</a>
-</li>
-</ul>
-</nav>
 </div>
 </header>
 <div id=content><main class="container article-wrapper">
@@ -61,16 +48,8 @@
 <p><img src=workspace.jpg alt=编辑环境截图></p>
 <h2 id=图文混排>图文混排</h2>
 <p>还可以用一点点 HTML 包装，让图片和文字排版更紧凑：</p>
-<figure class=image-note>
-<img src=code.jpg alt=终端里运行代码的屏幕>
-<figcaption>用于演示的终端截图，可以换成自己的调试画面。</figcaption>
-</figure>
 <h2 id=两张图片并排>两张图片并排</h2>
 <p>当需要对比两张截图时，可以利用一个小的 <code>&lt;div></code> 容器放两个 <code>&lt;img></code>：</p>
-<div class=image-grid>
-<img src=code.jpg alt=代码编辑器 loading=lazy>
-<img src=coffee.jpg alt=清晨咖啡与笔记本 loading=lazy>
-</div>
 <p>上面的示例都只用到文件名，因此把图片复制进文章目录后即可引用。如果想在其它文章复用同一张图，可以把文件放到 <code>static/images/</code>，引用时写绝对路径（例如 <code>/images/screenshot.png</code>）。</p>
 <p>写完后运行 <code>hugo server -D</code>，在浏览器里确认图片是否显示正确，同时检查体积和视觉效果是否满足预期。</p>
 </div>
