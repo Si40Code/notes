@@ -1,0 +1,374 @@
+<!doctype html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>让 Google 搜索到你的博客：完整 SEO 配置指南 · Notes</title>
+<meta name=description content="从零开始配置博客的 Google 搜索优化，包括 Search Console 验证、Sitemap 提交、结构化数据和邮件通知等完整流程。">
+<meta name=author content="Si40Code">
+<meta name=keywords content="博客,笔记,技术,学习,随笔,Hugo,Web开发">
+<meta name=theme-color content="#6366f1"><meta name=language content="zh-CN">
+<meta name=geo.region content="CN"><meta name=robots content="index, follow">
+<meta name=googlebot content="index, follow">
+<meta name=bingbot content="index, follow">
+<meta name=google-site-verification content="m_FerUXyd1Cyy4_h32-u83yW3I3d-cEzRDRRqQ6bwbk"><meta property="og:type" content="article">
+<meta property="og:title" content="让 Google 搜索到你的博客：完整 SEO 配置指南">
+<meta property="og:description" content="从零开始配置博客的 Google 搜索优化，包括 Search Console 验证、Sitemap 提交、结构化数据和邮件通知等完整流程。">
+<meta property="og:url" content="https://si40code.github.io/notes/posts/google-search-optimization/">
+<link rel=canonical href=https://si40code.github.io/notes/posts/google-search-optimization/>
+<meta name=generator content="Hugo 0.92.2">
+<link rel=stylesheet href=/notes/css/main.css>
+<link rel=stylesheet href=/notes/css/custom.css>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"让 Google 搜索到你的博客：完整 SEO 配置指南","description":"从零开始配置博客的 Google 搜索优化，包括 Search Console 验证、Sitemap 提交、结构化数据和邮件通知等完整流程。","author":{"@type":"Person","name":"Si40Code"},"publisher":{"@type":"Person","name":"Si40Code"},"datePublished":"2025-10-23T13:36:09\u002b08:00","dateModified":"2025-10-23T15:30:07\u002b08:00","url":"https:\/\/si40code.github.io\/notes\/posts\/google-search-optimization\/","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/si40code.github.io\/notes\/posts\/google-search-optimization\/"}}</script>
+</head>
+<body><header class=site-header>
+<div class="container header-inner">
+<div class=branding>
+<a href=/notes/>
+<span class=brand-title>Notes</span>
+</a>
+<span class=brand-tagline>记录随笔与学习笔记 - Si40Code的技术博客</span>
+</div>
+<nav class=site-nav>
+<ul>
+<li>
+<a href=/notes/notes/>首页</a>
+</li>
+<li>
+<a href=/notes/notes/posts/>文章</a>
+</li>
+</ul>
+</nav>
+</div>
+</header>
+<div id=content><main class="container article-wrapper">
+<article class=post-detail><figure class=post-cover>
+<img src=https://si40code.github.io/notes/posts/google-search-optimization/cover.jpg alt="让 Google 搜索到你的博客：完整 SEO 配置指南" loading=lazy decoding=async>
+</figure><h1>让 Google 搜索到你的博客：完整 SEO 配置指南</h1>
+<div class=post-meta><time datetime=2025-10-23>2025-10-23</time><span>·</span>
+<span>3 分钟读完</span>
+<span class=tag-chip>#SEO</span>
+<span class=tag-chip>#Google</span>
+<span class=tag-chip>#Hugo</span>
+<span class=tag-chip>#折腾记录</span>
+<span class=tag-chip>#教程</span>
+</div><aside class=table-of-contents>
+<h2>目录</h2>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#-目标>🎯 目标</a></li>
+<li><a href=#-配置清单>📋 配置清单</a>
+<ul>
+<li><a href=#1-基础-seo-配置>1. 基础 SEO 配置</a></li>
+<li><a href=#2-优化网站元数据>2. 优化网站元数据</a></li>
+<li><a href=#3-增强-html-头部标签>3. 增强 HTML 头部标签</a></li>
+<li><a href=#4-添加结构化数据json-ld>4. 添加结构化数据（JSON-LD）</a></li>
+<li><a href=#5-优化-robotstxt>5. 优化 robots.txt</a></li>
+<li><a href=#6-自定义-sitemap>6. 自定义 Sitemap</a></li>
+</ul>
+</li>
+<li><a href=#-google-search-console-配置>🔍 Google Search Console 配置</a>
+<ul>
+<li><a href=#步骤-1添加网站>步骤 1：添加网站</a></li>
+<li><a href=#步骤-2验证网站所有权>步骤 2：验证网站所有权</a></li>
+<li><a href=#步骤-3提交-sitemap>步骤 3：提交 Sitemap</a></li>
+</ul>
+</li>
+<li><a href=#-验证配置是否成功>📊 验证配置是否成功</a>
+<ul>
+<li><a href=#本地验证>本地验证</a></li>
+<li><a href=#在线验证工具>在线验证工具</a></li>
+</ul>
+</li>
+<li><a href=#-github-actions-自动部署通知>🚀 GitHub Actions 自动部署通知</a></li>
+<li><a href=#-内容优化建议>📝 内容优化建议</a>
+<ul>
+<li><a href=#为每篇文章添加完整的-front-matter>为每篇文章添加完整的 Front Matter</a></li>
+<li><a href=#使用描述性的-url>使用描述性的 URL</a></li>
+<li><a href=#添加内部链接>添加内部链接</a></li>
+</ul>
+</li>
+<li><a href=#-预期时间线>⏰ 预期时间线</a></li>
+<li><a href=#-持续优化>🔧 持续优化</a>
+<ul>
+<li><a href=#定期检查-search-console>定期检查 Search Console</a></li>
+<li><a href=#更新内容>更新内容</a></li>
+</ul>
+</li>
+<li><a href=#-seo-最佳实践>🎯 SEO 最佳实践</a></li>
+<li><a href=#-参考资源>📚 参考资源</a></li>
+<li><a href=#-总结>🎉 总结</a></li>
+</ul>
+</nav>
+</aside><div class=content>
+<p>当你搭建好博客后，如何让 Google 能够搜索到你的内容？这篇文章记录了我为这个 Hugo 博客配置 Google 搜索优化的完整过程。</p>
+<h2 id=-目标>🎯 目标</h2>
+<p>让 Google 能够：</p>
+<ul>
+<li>发现并索引你的网站</li>
+<li>理解你的内容结构</li>
+<li>在搜索结果中正确展示文章</li>
+<li>提供搜索性能数据</li>
+</ul>
+<h2 id=-配置清单>📋 配置清单</h2>
+<h3 id=1-基础-seo-配置>1. 基础 SEO 配置</h3>
+<p>首先在 <code>config.toml</code> 中启用必要的 SEO 功能：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-toml data-lang=toml><span style=color:#75715e># SEO配置</span>
+<span style=color:#a6e22e>enableRobotsTXT</span> = <span style=color:#66d9ef>true</span>
+<span style=color:#a6e22e>enableGitInfo</span> = <span style=color:#66d9ef>true</span>
+
+<span style=color:#75715e># Sitemap配置</span>
+[<span style=color:#a6e22e>sitemap</span>]
+  <span style=color:#a6e22e>changefreq</span> = <span style=color:#e6db74>&#34;weekly&#34;</span>
+  <span style=color:#a6e22e>priority</span> = <span style=color:#ae81ff>0.5</span>
+  <span style=color:#a6e22e>filename</span> = <span style=color:#e6db74>&#34;sitemap.xml&#34;</span>
+
+<span style=color:#75715e># 输出格式配置</span>
+[<span style=color:#a6e22e>outputs</span>]
+  <span style=color:#a6e22e>home</span> = [<span style=color:#e6db74>&#34;HTML&#34;</span>, <span style=color:#e6db74>&#34;RSS&#34;</span>, <span style=color:#e6db74>&#34;JSON&#34;</span>]
+</code></pre></div><h3 id=2-优化网站元数据>2. 优化网站元数据</h3>
+<p>在 <code>config.toml</code> 中配置网站的基本信息：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-toml data-lang=toml>[<span style=color:#a6e22e>params</span>]
+  <span style=color:#a6e22e>description</span> = <span style=color:#e6db74>&#39;记录随笔与学习笔记 - Si40Code的技术博客&#39;</span>
+  <span style=color:#a6e22e>author</span> = <span style=color:#e6db74>&#39;Si40Code&#39;</span>
+  <span style=color:#a6e22e>keywords</span> = [<span style=color:#e6db74>&#39;博客&#39;</span>, <span style=color:#e6db74>&#39;笔记&#39;</span>, <span style=color:#e6db74>&#39;技术&#39;</span>, <span style=color:#e6db74>&#39;学习&#39;</span>, <span style=color:#e6db74>&#39;随笔&#39;</span>, <span style=color:#e6db74>&#39;Hugo&#39;</span>, <span style=color:#e6db74>&#39;Web开发&#39;</span>]
+  
+  <span style=color:#75715e># SEO相关</span>
+  [<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>seo</span>]
+    <span style=color:#a6e22e>googleSiteVerification</span> = <span style=color:#e6db74>&#34;你的验证码&#34;</span>  <span style=color:#75715e># Google Search Console验证码</span>
+    <span style=color:#a6e22e>googleAnalytics</span> = <span style=color:#e6db74>&#34;&#34;</span>  <span style=color:#75715e># 如果需要可以添加GA ID</span>
+    <span style=color:#a6e22e>twitterCard</span> = <span style=color:#e6db74>&#34;summary_large_image&#34;</span>
+</code></pre></div><h3 id=3-增强-html-头部标签>3. 增强 HTML 头部标签</h3>
+<p>在 <code>layouts/partials/head.html</code> 中添加完整的 SEO meta 标签：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html>{{- with .Site.Params.keywords }}
+&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;keywords&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;{{ delimit . &#34;</span><span style=color:#960050;background-color:#1e0010>,</span> <span style=color:#960050;background-color:#1e0010>&#34;</span> <span style=color:#960050;background-color:#1e0010>}}&#34;</span>&gt;
+{{- end }}
+
+{{- /* 语言和地区设置 */ -}}
+&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;language&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;zh-CN&#34;</span>&gt;
+&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;geo.region&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;CN&#34;</span>&gt;
+
+{{- /* 搜索引擎优化 */ -}}
+&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;robots&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;index, follow&#34;</span>&gt;
+&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;googlebot&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;index, follow&#34;</span>&gt;
+&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;bingbot&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;index, follow&#34;</span>&gt;
+
+{{- /* Google Search Console验证 */ -}}
+{{- with .Site.Params.seo.googleSiteVerification }}
+&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;google-site-verification&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;{{ . }}&#34;</span>&gt;
+{{- end }}
+</code></pre></div><h3 id=4-添加结构化数据json-ld>4. 添加结构化数据（JSON-LD）</h3>
+<p>结构化数据帮助 Google 更好地理解你的内容：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html>{{- /* 结构化数据 - JSON-LD */ -}}
+{{- if .IsHome }}
+&lt;<span style=color:#f92672>script</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;application/ld+json&#34;</span>&gt;
+{
+  <span style=color:#e6db74>&#34;@context&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;https://schema.org&#34;</span>,
+  <span style=color:#e6db74>&#34;@type&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;WebSite&#34;</span>,
+  <span style=color:#e6db74>&#34;name&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Site.Title }}&#34;</span>,
+  <span style=color:#e6db74>&#34;description&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Site.Params.description }}&#34;</span>,
+  <span style=color:#e6db74>&#34;url&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Site.BaseURL }}&#34;</span>,
+  <span style=color:#e6db74>&#34;author&#34;</span><span style=color:#f92672>:</span> {
+    <span style=color:#e6db74>&#34;@type&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Person&#34;</span>,
+    <span style=color:#e6db74>&#34;name&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Site.Params.author }}&#34;</span>
+  }
+}
+&lt;/<span style=color:#f92672>script</span>&gt;
+{{- else }}
+&lt;<span style=color:#f92672>script</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;application/ld+json&#34;</span>&gt;
+{
+  <span style=color:#e6db74>&#34;@context&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;https://schema.org&#34;</span>,
+  <span style=color:#e6db74>&#34;@type&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;BlogPosting&#34;</span>,
+  <span style=color:#e6db74>&#34;headline&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Title }}&#34;</span>,
+  <span style=color:#e6db74>&#34;description&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ $description }}&#34;</span>,
+  <span style=color:#e6db74>&#34;author&#34;</span><span style=color:#f92672>:</span> {
+    <span style=color:#e6db74>&#34;@type&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;Person&#34;</span>,
+    <span style=color:#e6db74>&#34;name&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Site.Params.author }}&#34;</span>
+  },
+  <span style=color:#e6db74>&#34;datePublished&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Date.Format &#34;</span><span style=color:#ae81ff>2006</span><span style=color:#f92672>-</span><span style=color:#ae81ff>01</span><span style=color:#f92672>-</span><span style=color:#ae81ff>02</span><span style=color:#a6e22e>T15</span><span style=color:#f92672>:</span><span style=color:#ae81ff>04</span><span style=color:#f92672>:</span><span style=color:#ae81ff>05</span><span style=color:#a6e22e>Z07</span><span style=color:#f92672>:</span><span style=color:#ae81ff>00</span><span style=color:#e6db74>&#34; }}&#34;</span>,
+  <span style=color:#e6db74>&#34;dateModified&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Lastmod.Format &#34;</span><span style=color:#ae81ff>2006</span><span style=color:#f92672>-</span><span style=color:#ae81ff>01</span><span style=color:#f92672>-</span><span style=color:#ae81ff>02</span><span style=color:#a6e22e>T15</span><span style=color:#f92672>:</span><span style=color:#ae81ff>04</span><span style=color:#f92672>:</span><span style=color:#ae81ff>05</span><span style=color:#a6e22e>Z07</span><span style=color:#f92672>:</span><span style=color:#ae81ff>00</span><span style=color:#e6db74>&#34; }}&#34;</span>,
+  <span style=color:#e6db74>&#34;url&#34;</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#34;{{ .Permalink }}&#34;</span>
+}
+&lt;/<span style=color:#f92672>script</span>&gt;
+{{- end }}
+</code></pre></div><h3 id=5-优化-robotstxt>5. 优化 robots.txt</h3>
+<p>创建 <code>themes/notes-theme/layouts/robots.txt</code>：</p>
+<pre tabindex=0><code>User-agent: *
+Allow: /
+
+Sitemap: {{ .Site.BaseURL }}sitemap.xml
+</code></pre><h3 id=6-自定义-sitemap>6. 自定义 Sitemap</h3>
+<p>创建 <code>themes/notes-theme/layouts/sitemap.xml</code> 以优化不同页面的优先级：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-xml data-lang=xml>{{- range .Data.Pages }}
+{{- if ne .Kind &#34;404&#34; }}
+<span style=color:#f92672>&lt;url&gt;</span>
+  <span style=color:#f92672>&lt;loc&gt;</span>{{ .Permalink }}<span style=color:#f92672>&lt;/loc&gt;</span>
+  <span style=color:#f92672>&lt;lastmod&gt;</span>{{ .Lastmod.Format &#34;2006-01-02T15:04:05-07:00&#34; }}<span style=color:#f92672>&lt;/lastmod&gt;</span>
+  <span style=color:#f92672>&lt;changefreq&gt;</span>{{ if eq .Kind &#34;page&#34; }}monthly{{ else if eq .Kind &#34;section&#34; }}weekly{{ else }}daily{{ end }}<span style=color:#f92672>&lt;/changefreq&gt;</span>
+  <span style=color:#f92672>&lt;priority&gt;</span>{{ if eq .Kind &#34;page&#34; }}0.8{{ else if eq .Kind &#34;section&#34; }}0.6{{ else }}0.9{{ end }}<span style=color:#f92672>&lt;/priority&gt;</span>
+<span style=color:#f92672>&lt;/url&gt;</span>
+{{- end }}
+{{- end }}
+</code></pre></div><h2 id=-google-search-console-配置>🔍 Google Search Console 配置</h2>
+<h3 id=步骤-1添加网站>步骤 1：添加网站</h3>
+<ol>
+<li>访问 <a href=https://search.google.com/search-console/>Google Search Console</a></li>
+<li>使用 Google 账号登录</li>
+<li>点击"添加资源"</li>
+<li>选择"网址前缀"方式</li>
+<li>输入你的博客地址：<code>https://yourusername.github.io/yourrepo/</code></li>
+</ol>
+<h3 id=步骤-2验证网站所有权>步骤 2：验证网站所有权</h3>
+<ol>
+<li>选择"HTML 标记"验证方式</li>
+<li>Google 会给你一个验证码，类似：
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html>&lt;<span style=color:#f92672>meta</span> <span style=color:#a6e22e>name</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;google-site-verification&#34;</span> <span style=color:#a6e22e>content</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;abc123...&#34;</span> /&gt;
+</code></pre></div></li>
+<li>将验证码添加到 <code>config.toml</code>：
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-toml data-lang=toml>[<span style=color:#a6e22e>params</span>.<span style=color:#a6e22e>seo</span>]
+  <span style=color:#a6e22e>googleSiteVerification</span> = <span style=color:#e6db74>&#34;abc123...&#34;</span>
+</code></pre></div></li>
+<li>重新构建并部署网站：
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>hugo --gc --minify
+git add .
+git commit -m <span style=color:#e6db74>&#34;feat: 添加Google Search Console验证&#34;</span>
+git push
+</code></pre></div></li>
+<li>回到 Search Console，点击"验证"</li>
+</ol>
+<h3 id=步骤-3提交-sitemap>步骤 3：提交 Sitemap</h3>
+<p>验证成功后：</p>
+<ol>
+<li>在 Search Console 左侧菜单点击"Sitemap"</li>
+<li>添加新的 sitemap：<code>sitemap.xml</code></li>
+<li>点击"提交"</li>
+</ol>
+<h2 id=-验证配置是否成功>📊 验证配置是否成功</h2>
+<h3 id=本地验证>本地验证</h3>
+<p>构建后检查生成的文件：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e># 检查 robots.txt</span>
+cat public/robots.txt
+
+<span style=color:#75715e># 检查 sitemap.xml</span>
+head public/sitemap.xml
+
+<span style=color:#75715e># 检查 HTML 是否包含验证标签</span>
+grep <span style=color:#e6db74>&#34;google-site-verification&#34;</span> public/index.html
+</code></pre></div><h3 id=在线验证工具>在线验证工具</h3>
+<ol>
+<li>
+<p><strong>Rich Results Test</strong>：https://search.google.com/test/rich-results</p>
+<ul>
+<li>测试结构化数据是否正确</li>
+</ul>
+</li>
+<li>
+<p><strong>Schema Markup Validator</strong>：https://validator.schema.org/</p>
+<ul>
+<li>验证 JSON-LD 语法</li>
+</ul>
+</li>
+<li>
+<p><strong>robots.txt Tester</strong>：在 Search Console 的"robots.txt 测试工具"中测试</p>
+</li>
+</ol>
+<h2 id=-github-actions-自动部署通知>🚀 GitHub Actions 自动部署通知</h2>
+<p>为了知道博客何时成功发布，可以配置邮件通知。</p>
+<p>在 <code>.github/workflows/gh-pages.yml</code> 中添加：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>- <span style=color:#f92672>name</span>: <span style=color:#ae81ff>Send Success Notification</span>
+  <span style=color:#f92672>if</span>: <span style=color:#ae81ff>success()</span>
+  <span style=color:#f92672>uses</span>: <span style=color:#ae81ff>dawidd6/action-send-mail@v3</span>
+  <span style=color:#f92672>with</span>:
+    <span style=color:#f92672>server_address</span>: <span style=color:#ae81ff>smtp.gmail.com</span>
+    <span style=color:#f92672>server_port</span>: <span style=color:#ae81ff>587</span>
+    <span style=color:#f92672>username</span>: <span style=color:#ae81ff>${{ secrets.EMAIL_USERNAME }}</span>
+    <span style=color:#f92672>password</span>: <span style=color:#ae81ff>${{ secrets.EMAIL_PASSWORD }}</span>
+    <span style=color:#f92672>subject</span>: <span style=color:#e6db74>&#34;✅ 博客发布成功 - Notes&#34;</span>
+    <span style=color:#f92672>to</span>: <span style=color:#ae81ff>${{ secrets.NOTIFICATION_EMAIL }}</span>
+    <span style=color:#f92672>from</span>: <span style=color:#ae81ff>${{ secrets.EMAIL_USERNAME }}</span>
+    <span style=color:#f92672>body</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>      🎉 你的博客已经成功发布到 GitHub Pages！
+</span><span style=color:#e6db74>      
+</span><span style=color:#e6db74>      🔗 访问地址：https://yourusername.github.io/yourrepo/
+</span><span style=color:#e6db74>      📝 最新提交信息：${{ github.event.head_commit.message }}</span>      
+</code></pre></div><p>在 GitHub 仓库设置中添加 Secrets：</p>
+<ul>
+<li><code>EMAIL_USERNAME</code>：你的 Gmail 邮箱</li>
+<li><code>EMAIL_PASSWORD</code>：Gmail 应用专用密码</li>
+<li><code>NOTIFICATION_EMAIL</code>：接收通知的邮箱</li>
+</ul>
+<h2 id=-内容优化建议>📝 内容优化建议</h2>
+<h3 id=为每篇文章添加完整的-front-matter>为每篇文章添加完整的 Front Matter</h3>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml>---
+<span style=color:#f92672>title</span>: <span style=color:#e6db74>&#34;文章标题&#34;</span>
+<span style=color:#f92672>date</span>: <span style=color:#e6db74>2024-01-01</span>
+<span style=color:#f92672>draft</span>: <span style=color:#66d9ef>false</span>
+<span style=color:#f92672>summary</span>: <span style=color:#e6db74>&#34;文章摘要，用于 SEO 描述&#34;</span>
+<span style=color:#f92672>tags</span>: [<span style=color:#e6db74>&#34;标签1&#34;</span>, <span style=color:#e6db74>&#34;标签2&#34;</span>]
+---
+</code></pre></div><h3 id=使用描述性的-url>使用描述性的 URL</h3>
+<ul>
+<li>使用有意义的文章 slug</li>
+<li>避免使用日期或无意义的字符</li>
+<li>保持 URL 简短清晰</li>
+</ul>
+<h3 id=添加内部链接>添加内部链接</h3>
+<p>在文章中添加指向其他相关文章的链接，帮助 Google 理解内容结构。</p>
+<h2 id=-预期时间线>⏰ 预期时间线</h2>
+<ul>
+<li><strong>Google 索引</strong>：通常需要几天到几周时间</li>
+<li><strong>Search Console 数据</strong>：可能需要 1-2 天开始显示数据</li>
+<li><strong>搜索结果出现</strong>：取决于内容质量和竞争程度</li>
+</ul>
+<h2 id=-持续优化>🔧 持续优化</h2>
+<h3 id=定期检查-search-console>定期检查 Search Console</h3>
+<ol>
+<li><strong>覆盖率报告</strong>：查看哪些页面被索引</li>
+<li><strong>搜索效果</strong>：了解哪些关键词带来流量</li>
+<li><strong>移动设备易用性</strong>：确保移动端体验良好</li>
+<li><strong>核心网页指标</strong>：关注页面加载速度</li>
+</ol>
+<h3 id=更新内容>更新内容</h3>
+<ul>
+<li>定期发布新内容</li>
+<li>更新旧文章保持相关性</li>
+<li>保持 sitemap 的活跃度</li>
+</ul>
+<h2 id=-seo-最佳实践>🎯 SEO 最佳实践</h2>
+<ol>
+<li><strong>标题优化</strong>：使用描述性的标题，包含关键词</li>
+<li><strong>描述标签</strong>：为每篇文章编写独特的摘要</li>
+<li><strong>图片优化</strong>：使用 alt 属性描述图片内容</li>
+<li><strong>响应式设计</strong>：确保网站在移动设备上正常显示</li>
+<li><strong>页面速度</strong>：优化加载速度，使用 <code>hugo --minify</code></li>
+<li><strong>HTTPS</strong>：GitHub Pages 自动提供 HTTPS</li>
+</ol>
+<h2 id=-参考资源>📚 参考资源</h2>
+<ul>
+<li><a href=https://developers.google.com/search>Google Search Central</a></li>
+<li><a href=https://gohugo.io/templates/robots/>Hugo SEO 文档</a></li>
+<li><a href=https://schema.org/>Schema.org 文档</a></li>
+</ul>
+<h2 id=-总结>🎉 总结</h2>
+<p>通过以上配置，你的博客已经具备了完整的 SEO 优化：</p>
+<ul>
+<li>✅ Google Search Console 验证</li>
+<li>✅ Sitemap 自动生成和提交</li>
+<li>✅ 完整的 meta 标签和结构化数据</li>
+<li>✅ robots.txt 正确配置</li>
+<li>✅ 自动部署通知</li>
+</ul>
+<p>现在只需要耐心等待 Google 索引你的内容，并持续创作高质量的文章！</p>
+<hr>
+<p><strong>相关文章</strong>：</p>
+<ul>
+<li><a href=/posts/blog-refresh-notes/>部署到 GitHub Pages 并焕新主页</a></li>
+<li><a href=/posts/hello-world/>Hugo 博客搭建教程</a></li>
+</ul>
+</div>
+</article>
+</main>
+</div><footer class=site-footer>
+<div class=container>
+<span>&copy; 2025 Notes.</span>
+</div>
+</footer><script>(function(){var e=document.querySelectorAll('.image-grid img'),a,c,b,d,i,g;if(!e.length)return;a=document.createElement('div'),a.className='image-lightbox',a.setAttribute('role','dialog'),a.setAttribute('aria-modal','true'),a.setAttribute('aria-hidden','true'),c=document.createElement('img'),c.className='image-lightbox__img',a.appendChild(c),b=document.createElement('button'),b.type='button',b.className='image-lightbox__close',b.setAttribute('aria-label','关闭图片'),b.innerHTML='&times;',a.appendChild(b),d=null;function f(){if(!a.classList.contains('is-open'))return;a.classList.remove('is-open'),a.setAttribute('aria-hidden','true'),c.removeAttribute('src'),d&&(d.focus({preventScroll:!0}),d=null)}function h(e,f,g){c.src=e,c.alt=f||'',a.classList.add('is-open'),a.setAttribute('aria-hidden','false'),d=g,b.focus({preventScroll:!0})}b.addEventListener('click',function(a){a.stopPropagation(),f()}),a.addEventListener('click',function(b){b.target===a&&f()}),document.addEventListener('keydown',function(a){a.key==='Escape'&&f()}),document.body.appendChild(a),i=function(a){a.setAttribute('tabindex','0'),a.setAttribute('role','button'),a.getAttribute('aria-label')||a.setAttribute('aria-label','点击放大图片'),a.addEventListener('click',function(b){var a=b.currentTarget;h(a.currentSrc||a.src,a.alt,a)}),a.addEventListener('keydown',function(a){if(a.key==='Enter'||a.key===' '){a.preventDefault();var b=a.currentTarget;h(b.currentSrc||b.src,b.alt,b)}})};for(g=0;g<e.length;g++)i(e[g])})()</script></body>
+</html>
