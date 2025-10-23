@@ -16,7 +16,35 @@
   {{- with .Site.Params.author }}
   <meta name="author" content="{{ . }}">
   {{- end }}
+  {{- with .Site.Params.keywords }}
+  <meta name="keywords" content="{{ delimit . ", " }}">
+  {{- end }}
   <meta name="theme-color" content="#6366f1">
+  
+  {{- /* 语言和地区设置 */ -}}
+  <meta name="language" content="zh-CN">
+  <meta name="geo.region" content="CN">
+  
+  {{- /* 搜索引擎优化 */ -}}
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="bingbot" content="index, follow">
+  
+  {{- /* Google Search Console验证 */ -}}
+  {{- with .Site.Params.seo.googleSiteVerification }}
+  <meta name="google-site-verification" content="{{ . }}">
+  {{- end }}
+  
+  {{- /* Google Analytics */ -}}
+  {{- with .Site.Params.seo.googleAnalytics }}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ . }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ . }}');
+  </script>
+  {{- end }}
   {{- if .IsHome -}}
   <meta property="og:type" content="website">
   {{- else -}}
@@ -33,5 +61,50 @@
   <link rel="stylesheet" href="{{ "css/custom.css" | relURL }}">
   {{- range .AlternativeOutputFormats }}
     <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}">
+  {{- end }}
+  
+  {{- /* 结构化数据 - JSON-LD */ -}}
+  {{- if .IsHome }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ .Site.Title }}",
+    "description": "{{ .Site.Params.description }}",
+    "url": "{{ .Site.BaseURL }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ .Site.Params.author }}"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "{{ .Site.Params.author }}"
+    }
+  }
+  </script>
+  {{- else }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ .Title }}",
+    "description": "{{ $description }}",
+    "author": {
+      "@type": "Person",
+      "name": "{{ .Site.Params.author }}"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "{{ .Site.Params.author }}"
+    },
+    "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+    "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+    "url": "{{ .Permalink }}",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "{{ .Permalink }}"
+    }
+  }
+  </script>
   {{- end }}
 </head>
