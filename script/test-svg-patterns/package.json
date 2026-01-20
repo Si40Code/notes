@@ -1,0 +1,13 @@
+{
+  "name": "test-svg-patterns",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js",
+    "generate:cover": "node generate-cover-like.js --out output/cover-like.svg"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

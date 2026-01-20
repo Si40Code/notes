@@ -3,7 +3,7 @@ title: "开始写笔记"
 date: 2025-09-27T00:03:15+08:00
 draft: false
 tags: ["随笔", "记录"]
-cover: cover.jpg
+cover: cover.svg
 coverAlt: "清晨咖啡与打开的笔记本"
 ---
 

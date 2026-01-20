@@ -3,7 +3,7 @@ title: "Cherry-Studio是怎么实现Web Search的?源码解析"
 date: 2025-09-28T10:06:08+08:00
 draft: false
 tags: ["Agent", "Cherry Studio","源码解析"]
-cover: cover.png
+cover: cover.svg
 summary: "梳理 Cherry Studio 的 Web Search 调用链：从交互触发、意图分析到隐藏浏览器抓取与引用呈现的完整实现。"
 ---
 

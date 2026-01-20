@@ -4,7 +4,7 @@ date: 2025-09-27T00:40:00+08:00
 draft: false
 tags: ["折腾记录", "Hugo"]
 summary: "记录把 Notes 博客上线到 GitHub Pages 的全过程，并整理这次主题美化的思路。"
-cover: cover.jpg
+cover: cover.svg
 coverAlt: "夜幕下的城市上空出现霓虹色调的光束"
 coverCaption: "部署完成的夜空烟火时刻"
 ---

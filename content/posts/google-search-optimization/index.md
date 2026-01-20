@@ -1,7 +1,7 @@
 ---
 title: "让 Google 搜索到你的博客：完整 SEO 配置指南"
 date: 2025-10-23T13:36:09+08:00
-cover: cover.jpg
+cover: cover.svg
 draft: false
 tags: ["SEO", "Google", "Hugo", "折腾记录", "教程"]
 summary: "从零开始配置博客的 Google 搜索优化，包括 Search Console 验证、Sitemap 提交、结构化数据和邮件通知等完整流程。"

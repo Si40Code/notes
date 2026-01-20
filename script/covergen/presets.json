@@ -1,0 +1,53 @@
+{
+  "default": {
+    "bg": "#2b2b31",
+    "primary": "#ecc94b",
+    "accent": "#f44034",
+    "textColor": "#ffffff",
+    "textBg": "#000000",
+    "textBgOpacity": 0.35,
+    "titleSize": 72,
+    "subtitleSize": 30
+  },
+  "morandi": {
+    "bg": "#2f3136",
+    "primary": "#c2b8a3",
+    "accent": "#d19a66",
+    "textColor": "#ffffff",
+    "textBg": "#000000",
+    "textBgOpacity": 0.28,
+    "titleSize": 72,
+    "subtitleSize": 30
+  },
+  "midnightNeon": {
+    "bg": "#050814",
+    "primary": "#22d3ee",
+    "accent": "#a78bfa",
+    "textColor": "#f8fafc",
+    "textBg": "#000000",
+    "textBgOpacity": 0.22,
+    "titleSize": 72,
+    "subtitleSize": 30
+  },
+  "paperInk": {
+    "bg": "#faf7f0",
+    "primary": "#111827",
+    "accent": "#ef4444",
+    "textColor": "#111827",
+    "textBg": "#ffffff",
+    "textBgOpacity": 0.55,
+    "titleSize": 72,
+    "subtitleSize": 30
+  },
+  "highContrast": {
+    "bg": "#000000",
+    "primary": "#ffffff",
+    "accent": "#ff0033",
+    "textColor": "#ffffff",
+    "textBg": "#000000",
+    "textBgOpacity": 0.35,
+    "titleSize": 78,
+    "subtitleSize": 32
+  }
+}
+

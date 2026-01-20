@@ -4,7 +4,7 @@ date: 2025-09-27T00:46:00+08:00
 draft: false
 tags: ["Mermaid", "可视化", "测试"]
 summary: "收集常用的 Mermaid 语法，包括流程图、时序图、状态图、甘特图等，方便确认主题展示效果。"
-cover: cover.jpg
+cover: cover.svg
 coverAlt: "数据可视化仪表盘屏幕"
 coverCaption: "Mermaid 图示灵感墙"
 ---

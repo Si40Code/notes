@@ -4,7 +4,7 @@ date: 2025-09-27T00:50:00+08:00
 draft: false
 tags: ["Markdown", "测试", "样式"]
 summary: "用一篇文档覆盖常见 Markdown 语法，验证主题的排版与组件表现。"
-cover: cover.jpg
+cover: cover.svg
 coverAlt: "桌面上摊开的笔记本和键盘"
 coverCaption: "Markdown 语法练习"
 ---

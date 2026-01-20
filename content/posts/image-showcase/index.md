@@ -4,7 +4,7 @@ date: 2025-09-27T12:00:00+08:00
 draft: false
 tags: ["写作流程", "素材管理"]
 summary: "演示如何在文章中引用自己下载的图片，包括封面、正文插图以及简单的图文布局。"
-cover: workspace.jpg
+cover: cover.svg
 coverAlt: "木质桌面上的笔记本电脑与便签"
 coverCaption: "写作时的工作台"
 ---

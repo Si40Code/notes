@@ -25,6 +25,9 @@
 - Execute `hugo --gc --minify` before pushing to confirm a clean build and regenerate assets; spot-check the resulting `public/` output locally.
 - Store visual diffs or screenshots alongside pull requests rather than in the repo; long-lived media belongs in `static/`.
 
+## Agent Skills (Cursor local testing)
+- This repo includes optional skill SOPs under `skills/`. When asked to “use skills”, first read the relevant `skills/<name>/SKILL.md`, then follow it strictly before making edits.
+
 ## Commit & Pull Request Guidelines
 - Write imperative, concise commit subjects; prefer Conventional Commit prefixes (`feat:`, `fix:`, `chore:`) as in `feat: localize article images and polish visuals`.
 - Keep commits focused: separate theme tweaks, content updates, and configuration changes.
