@@ -1,0 +1,156 @@
+<!doctype html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Agent Skills：把专家 SOP 打包成 AI 可加载的技能 · Notes</title>
+<meta name=description content="介绍 Anthropic 的 Agent Skills：一种用文件夹 + SKILL.md 沉淀程序性知识的方式，解决“工具会用但流程不会用”的问题。">
+<meta name=author content="Si40Code">
+<meta name=keywords content="博客,笔记,技术,学习,随笔,Hugo,Web开发">
+<meta name=theme-color content="#6366f1"><meta name=language content="zh-CN">
+<meta name=geo.region content="CN"><meta name=robots content="index, follow">
+<meta name=googlebot content="index, follow">
+<meta name=bingbot content="index, follow">
+<meta name=google-site-verification content="m_FerUXyd1Cyy4_h32-u83yW3I3d-cEzRDRRqQ6bwbk"><meta property="og:type" content="article">
+<meta property="og:title" content="Agent Skills：把专家 SOP 打包成 AI 可加载的技能">
+<meta property="og:description" content="介绍 Anthropic 的 Agent Skills：一种用文件夹 + SKILL.md 沉淀程序性知识的方式，解决“工具会用但流程不会用”的问题。">
+<meta property="og:url" content="https://si40code.github.io/notes/posts/agent-skills/">
+<link rel=canonical href=https://si40code.github.io/notes/posts/agent-skills/>
+<meta name=generator content="Hugo 0.92.2">
+<link rel=stylesheet href=/notes/css/main.css>
+<link rel=stylesheet href=/notes/css/custom.css>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Agent Skills：把专家 SOP 打包成 AI 可加载的技能","description":"介绍 Anthropic 的 Agent Skills：一种用文件夹 \u002b SKILL.md 沉淀程序性知识的方式，解决“工具会用但流程不会用”的问题。","author":{"@type":"Person","name":"Si40Code"},"publisher":{"@type":"Person","name":"Si40Code"},"datePublished":"2026-01-16T00:00:00\u002b08:00","dateModified":"2026-01-20T19:13:46\u002b08:00","url":"https:\/\/si40code.github.io\/notes\/posts\/agent-skills\/","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/si40code.github.io\/notes\/posts\/agent-skills\/"}}</script>
+</head>
+<body><header class=site-header>
+<div class="container header-inner">
+<div class=branding>
+<a href=/notes/>
+<span class=brand-title>Notes</span>
+</a>
+<span class=brand-tagline>记录随笔与学习笔记 - Si40Code的技术博客</span>
+</div>
+<nav class=site-nav>
+<ul>
+<li>
+<a href=/notes/notes/>首页</a>
+</li>
+<li>
+<a href=/notes/notes/posts/>文章</a>
+</li>
+</ul>
+</nav>
+</div>
+</header>
+<div id=content><main class="container article-wrapper">
+<article class=post-detail><figure class=post-cover>
+<img src=https://si40code.github.io/notes/posts/agent-skills/cover.svg alt=桌面上的笔记本与键盘 loading=lazy decoding=async>
+<figcaption>Agent Skills：把做事方法论变成可复用的技能包</figcaption>
+</figure><h1>Agent Skills：把专家 SOP 打包成 AI 可加载的技能</h1>
+<div class=post-meta><time datetime=2026-01-16>2026-01-16</time><span>·</span>
+<span>约 1 分钟读完</span>
+<span class=tag-chip>#agent</span>
+<span class=tag-chip>#AI</span>
+<span class=tag-chip>#Claude</span>
+<span class=tag-chip>#SOP</span>
+<span class=tag-chip>#技能</span>
+</div><aside class=table-of-contents>
+<h2>目录</h2>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#简单一句话总结它是什么>简单一句话总结它是什么</a></li>
+<li><a href=#为什么-anthropic-要设计-agent-skills核心原因>为什么 Anthropic 要设计 Agent Skills？（核心原因）</a></li>
+<li><a href=#最核心的设计创新渐进式披露progressive-disclosure>最核心的设计创新：渐进式披露（Progressive Disclosure）</a></li>
+<li><a href=#总结为什么非要搞出这么个东西>总结：为什么非要搞出这么个东西？</a></li>
+</ul>
+</nav>
+</aside><div class=content>
+<p><strong>Agent Skills</strong> 是 Anthropic（Claude 的母公司）在 2025 年左右推出的一种 <strong>AI 智能体（Agent）能力扩展标准</strong>，目前主要在 Claude 生态中使用（Claude.ai、Claude Code、API 等）。</p>
+<p>它本质上是一种<strong>文件夹 + 结构化 Markdown 文件（通常叫 SKILL.md）<strong>的封装格式，用来给通用 AI Agent 注入</strong>特定领域的“程序性知识”</strong>（procedural knowledge），也就是“怎么做一件事的完整方法论 + SOP + 示例 + 判断条件 + 最佳实践”。</p>
+<h2 id=简单一句话总结它是什么>简单一句话总结它是什么</h2>
+<p>Agent Skills = 把“领域专家的做事手册”做成一个可以被 AI 按需自动加载的插件文件夹。</p>
+<h2 id=为什么-anthropic-要设计-agent-skills核心原因>为什么 Anthropic 要设计 Agent Skills？（核心原因）</h2>
+<p>当时已经有了 MCP（Model Context Protocol）这样的工具调用标准，它相当于给 AI 装了“手”（能调用外部 API、数据库、文件系统、代码执行环境等），但 AI 还是经常做不好复杂任务，主要因为缺两样东西：</p>
+<ol>
+<li>不知道<strong>什么时候该用哪把工具</strong></li>
+<li>不知道<strong>应该怎么正确、规范地组合使用这些工具</strong>（顺序、边界条件、公司规范、异常处理、最佳实践等）</li>
+</ol>
+<p>一句话：<strong>MCP 解决了“能不能做”，Skills 解决“应该怎么做好”。</strong></p>
+<table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>MCP（工具调用协议）</th>
+<th>Agent Skills（技能包）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主要解决什么</td>
+<td>连接性（能调用外部工具和数据）</td>
+<td>程序性知识（知道该怎么做、按什么流程做）</td>
+</tr>
+<tr>
+<td>类比</td>
+<td>给 AI 装了“手”和“网线”</td>
+<td>给 AI 一本“标准操作手册 + SOP + Checklist”</td>
+</tr>
+<tr>
+<td>内容形式</td>
+<td>接口定义、参数 schema</td>
+<td>Markdown 指令 + 示例 + 判断逻辑 + 可执行脚本</td>
+</tr>
+<tr>
+<td>加载方式</td>
+<td>通常常驻或按需调用工具</td>
+<td><strong>渐进式披露</strong>（Progressive Disclosure）：先看简介 → 需要时再读详细 → 极度需要时读附件/代码</td>
+</tr>
+<tr>
+<td>Token 效率</td>
+<td>中等</td>
+<td>高（初始只加载几百 token 的元数据）</td>
+</tr>
+<tr>
+<td>谁能写</td>
+<td>主要开发者</td>
+<td>开发者 + 领域专家 + 普通专业人士（门槛低）</td>
+</tr>
+<tr>
+<td>可组合性</td>
+<td>工具可以组合</td>
+<td>技能可以组合、复用、交易（未来像 npm 市场）</td>
+</tr>
+</tbody>
+</table>
+<h2 id=最核心的设计创新渐进式披露progressive-disclosure>最核心的设计创新：渐进式披露（Progressive Disclosure）</h2>
+<p>为了不把上下文窗口塞爆，Anthropic 把一个 Skill 分成三层加载：</p>
+<ol>
+<li>
+<p><strong>元数据层</strong>（name + description）<br>
+→ 一直驻留在 system prompt 里，成本极低（几十~几百 token），让 AI 知道“有这么个技能，适合这种场景”</p>
+</li>
+<li>
+<p><strong>核心指令层</strong>（SKILL.md 正文）<br>
+→ 只有判断“需要用这个技能”时才加载，通常包含 80% 场景的完整流程</p>
+</li>
+<li>
+<p><strong>参考资源层</strong>（examples、templates、scripts、docs 等）<br>
+→ 只有走到非常具体的细节步骤时才读取，相当于“附录”</p>
+</li>
+</ol>
+<p>这样就实现了**“需要多少知识就加载多少”**，极大降低了 token 消耗，同时保持了专业性。</p>
+<h2 id=总结为什么非要搞出这么个东西>总结：为什么非要搞出这么个东西？</h2>
+<ul>
+<li>通用大模型 → 很聪明，但<strong>缺乏行业/公司/项目专属的“肌肉记忆”</strong></li>
+<li>传统 prompt → 每次都要重复写，容易遗漏、不一致、难维护</li>
+<li>传统 RAG → 擅长找“是什么”，不擅长教“怎么做”</li>
+<li>传统 Tool Call → 能做事，但容易用错顺序、漏步骤、违背规范</li>
+</ul>
+<p>Agent Skills 就是在这些方案都不够好的情况下，提出的<strong>下一代、更工程化、可沉淀、可分享、可交易的“AI 专业能力封装方式”</strong>。</p>
+<p>目前（2026 年初）它还是 Claude 生态最成熟的实现，但思想已经开始影响其他厂商和开源社区，未来很可能成为 AI Agent 领域类似“npm / VS Code 插件市场”一样的标准能力分发方式。</p>
+</div>
+</article>
+</main>
+</div><footer class=site-footer>
+<div class=container>
+<span>&copy; 2026 Notes.</span>
+</div>
+</footer><script>(function(){var e=document.querySelectorAll('.image-grid img'),a,c,b,d,i,g;if(!e.length)return;a=document.createElement('div'),a.className='image-lightbox',a.setAttribute('role','dialog'),a.setAttribute('aria-modal','true'),a.setAttribute('aria-hidden','true'),c=document.createElement('img'),c.className='image-lightbox__img',a.appendChild(c),b=document.createElement('button'),b.type='button',b.className='image-lightbox__close',b.setAttribute('aria-label','关闭图片'),b.innerHTML='&times;',a.appendChild(b),d=null;function f(){if(!a.classList.contains('is-open'))return;a.classList.remove('is-open'),a.setAttribute('aria-hidden','true'),c.removeAttribute('src'),d&&(d.focus({preventScroll:!0}),d=null)}function h(e,f,g){c.src=e,c.alt=f||'',a.classList.add('is-open'),a.setAttribute('aria-hidden','false'),d=g,b.focus({preventScroll:!0})}b.addEventListener('click',function(a){a.stopPropagation(),f()}),a.addEventListener('click',function(b){b.target===a&&f()}),document.addEventListener('keydown',function(a){a.key==='Escape'&&f()}),document.body.appendChild(a),i=function(a){a.setAttribute('tabindex','0'),a.setAttribute('role','button'),a.getAttribute('aria-label')||a.setAttribute('aria-label','点击放大图片'),a.addEventListener('click',function(b){var a=b.currentTarget;h(a.currentSrc||a.src,a.alt,a)}),a.addEventListener('keydown',function(a){if(a.key==='Enter'||a.key===' '){a.preventDefault();var b=a.currentTarget;h(b.currentSrc||b.src,b.alt,b)}})};for(g=0;g<e.length;g++)i(e[g])})()</script></body>
+</html>

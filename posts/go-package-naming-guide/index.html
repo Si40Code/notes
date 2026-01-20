@@ -1,0 +1,496 @@
+<!doctype html><html lang=en><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<title>Go 包命名的最佳实践：从 go-pkg-sdk 到 kit 的重构之旅 · Notes</title>
+<meta name=description content="记录随笔与学习笔记 - Si40Code的技术博客">
+<meta name=author content="Si40Code">
+<meta name=keywords content="博客,笔记,技术,学习,随笔,Hugo,Web开发">
+<meta name=theme-color content="#6366f1"><meta name=language content="zh-CN">
+<meta name=geo.region content="CN"><meta name=robots content="index, follow">
+<meta name=googlebot content="index, follow">
+<meta name=bingbot content="index, follow">
+<meta name=google-site-verification content="m_FerUXyd1Cyy4_h32-u83yW3I3d-cEzRDRRqQ6bwbk"><meta property="og:type" content="article">
+<meta property="og:title" content="Go 包命名的最佳实践：从 go-pkg-sdk 到 kit 的重构之旅">
+<meta property="og:description" content="记录随笔与学习笔记 - Si40Code的技术博客">
+<meta property="og:url" content="https://si40code.github.io/notes/posts/go-package-naming-guide/">
+<link rel=canonical href=https://si40code.github.io/notes/posts/go-package-naming-guide/>
+<meta name=generator content="Hugo 0.92.2">
+<link rel=stylesheet href=/notes/css/main.css>
+<link rel=stylesheet href=/notes/css/custom.css>
+<script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"Go 包命名的最佳实践：从 go-pkg-sdk 到 kit 的重构之旅","description":"记录随笔与学习笔记 - Si40Code的技术博客","author":{"@type":"Person","name":"Si40Code"},"publisher":{"@type":"Person","name":"Si40Code"},"datePublished":"2025-10-27T00:00:00\u002b08:00","dateModified":"2026-01-20T19:13:46\u002b08:00","url":"https:\/\/si40code.github.io\/notes\/posts\/go-package-naming-guide\/","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/si40code.github.io\/notes\/posts\/go-package-naming-guide\/"}}</script>
+</head>
+<body><header class=site-header>
+<div class="container header-inner">
+<div class=branding>
+<a href=/notes/>
+<span class=brand-title>Notes</span>
+</a>
+<span class=brand-tagline>记录随笔与学习笔记 - Si40Code的技术博客</span>
+</div>
+<nav class=site-nav>
+<ul>
+<li>
+<a href=/notes/notes/>首页</a>
+</li>
+<li>
+<a href=/notes/notes/posts/>文章</a>
+</li>
+</ul>
+</nav>
+</div>
+</header>
+<div id=content><main class="container article-wrapper">
+<article class=post-detail><figure class=post-cover>
+<img src=https://si40code.github.io/notes/posts/go-package-naming-guide/cover.svg alt="Go 包命名的最佳实践：从 go-pkg-sdk 到 kit 的重构之旅" loading=lazy decoding=async>
+</figure><h1>Go 包命名的最佳实践：从 go-pkg-sdk 到 kit 的重构之旅</h1>
+<div class=post-meta><time datetime=2025-10-27>2025-10-27</time><span>·</span>
+<span>3 分钟读完</span>
+<span class=tag-chip>#Go</span>
+<span class=tag-chip>#编程规范</span>
+<span class=tag-chip>#架构设计</span>
+</div><aside class=table-of-contents>
+<h2>目录</h2>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#引言>引言</a></li>
+<li><a href=#为什么命名如此重要>为什么命名如此重要？</a>
+<ul>
+<li><a href=#1-可读性>1. 可读性</a></li>
+<li><a href=#2-可维护性>2. 可维护性</a></li>
+<li><a href=#3-ai-agent友好>3. AI Agent友好</a></li>
+</ul>
+</li>
+<li><a href=#go-包命名的核心原则>Go 包命名的核心原则</a>
+<ul>
+<li><a href=#原则1简短清晰单数>原则1：简短、清晰、单数</a></li>
+<li><a href=#原则2避免无意义的前缀后缀>原则2：避免无意义的前缀/后缀</a></li>
+<li><a href=#原则3使用完整路径区分不用前缀区分>原则3：使用完整路径区分，不用前缀区分</a></li>
+<li><a href=#原则4不要用项目公司名重复>原则4：不要用项目/公司名重复</a></li>
+</ul>
+</li>
+<li><a href=#我的重构经验从-go-pkg-sdk-到-kit>我的重构经验：从 go-pkg-sdk 到 kit</a>
+<ul>
+<li><a href=#问题分析>问题分析</a></li>
+<li><a href=#解决方案>解决方案</a></li>
+<li><a href=#对比知名项目>对比知名项目</a></li>
+</ul>
+</li>
+<li><a href=#接口设计的最佳实践>接口设计的最佳实践</a>
+<ul>
+<li><a href=#原则accept-interfaces-return-structs>原则：&ldquo;Accept interfaces, return structs&rdquo;</a></li>
+</ul>
+</li>
+<li><a href=#何时应该做接口抽象>何时应该做接口抽象？</a>
+<ul>
+<li><a href=#-不应该做接口的情况>❌ 不应该做接口的情况</a></li>
+<li><a href=#-应该做接口的情况>✅ 应该做接口的情况</a></li>
+</ul>
+</li>
+<li><a href=#包结构设计指南>包结构设计指南</a>
+<ul>
+<li><a href=#推荐的目录结构>推荐的目录结构</a></li>
+<li><a href=#命名约定>命名约定</a></li>
+<li><a href=#ai-agent友好的设计>AI Agent友好的设计</a></li>
+</ul>
+</li>
+<li><a href=#包命名的场景建议>包命名的场景建议</a>
+<ul>
+<li><a href=#通用工具包>通用工具包</a></li>
+<li><a href=#可观测性工具包>可观测性工具包</a></li>
+<li><a href=#企业团队内部库>企业/团队内部库</a></li>
+</ul>
+</li>
+<li><a href=#命名决策表>命名决策表</a></li>
+<li><a href=#重构检查清单>重构检查清单</a></li>
+<li><a href=#总结>总结</a></li>
+<li><a href=#参考资源>参考资源</a></li>
+</ul>
+</nav>
+</aside><div class=content>
+<h2 id=引言>引言</h2>
+<p>最近我重构了一个Go工具包，从 <code>go-pkg-sdk</code> 重命名为 <code>kit</code>。这个过程让我深刻认识到<strong>包命名</strong>的重要性。好的命名能提升代码的可读性、可维护性，更重要的是，能让AI Agent更好地理解和导航代码。</p>
+<h2 id=为什么命名如此重要>为什么命名如此重要？</h2>
+<h3 id=1-可读性>1. 可读性</h3>
+<p>好的包名应该让代码自解释：</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// ❌ 糟糕
+</span><span style=color:#75715e></span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;yourproject/xlog&#34;</span>
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;yourproject/xhttp&#34;</span>
+
+<span style=color:#75715e>// ✅ 清晰
+</span><span style=color:#75715e></span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;yourproject/log&#34;</span>
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;yourproject/http&#34;</span>
+</code></pre></div><h3 id=2-可维护性>2. 可维护性</h3>
+<p>遵循社区约定能让团队成员快速上手，也能让AI更好地理解代码结构。</p>
+<h3 id=3-ai-agent友好>3. AI Agent友好</h3>
+<p>清晰的命名让AI更容易定位代码、理解模块关系、生成符合项目风格的代码。</p>
+<h2 id=go-包命名的核心原则>Go 包命名的核心原则</h2>
+<h3 id=原则1简短清晰单数>原则1：简短、清晰、单数</h3>
+<p><strong>好例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>log</span>      <span style=color:#75715e>// ✅
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>http</span>     <span style=color:#75715e>// ✅
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>db</span>       <span style=color:#75715e>// ✅
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>cache</span>    <span style=color:#75715e>// ✅
+</span></code></pre></div><p><strong>坏例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>logs</span>          <span style=color:#75715e>// ❌ 不要复数
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>httputils</span>     <span style=color:#75715e>// ❌ 太长
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>my_logger</span>     <span style=color:#75715e>// ❌ 不要下划线
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>pkg</span>           <span style=color:#75715e>// ❌ 太泛用
+</span></code></pre></div><h3 id=原则2避免无意义的前缀后缀>原则2：避免无意义的前缀/后缀</h3>
+<p><strong>坏例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>xlog</span>       <span style=color:#75715e>// x是什么意思？
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>util</span>      <span style=color:#75715e>// 太泛用
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>helper</span>     <span style=color:#75715e>// 没有实际含义
+</span><span style=color:#75715e></span><span style=color:#f92672>package</span> <span style=color:#a6e22e>golog</span>      <span style=color:#75715e>// go是多余的
+</span></code></pre></div><p><strong>好例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>package</span> <span style=color:#a6e22e>log</span>
+<span style=color:#f92672>package</span> <span style=color:#a6e22e>logger</span>
+<span style=color:#f92672>package</span> <span style=color:#a6e22e>zap</span>        <span style=color:#75715e>// 如果需要区分实现
+</span></code></pre></div><h3 id=原则3使用完整路径区分不用前缀区分>原则3：使用完整路径区分，不用前缀区分</h3>
+<p><strong>坏例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;project/xlog&#34;</span>
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;project/xhttp&#34;</span>
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;project/xdb&#34;</span>
+</code></pre></div><p><strong>好例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;project/log&#34;</span>
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;project/http&#34;</span>
+<span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;project/db&#34;</span>
+</code></pre></div><h3 id=原则4不要用项目公司名重复>原则4：不要用项目/公司名重复</h3>
+<p><strong>坏例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>module</span> <span style=color:#a6e22e>github</span>.<span style=color:#a6e22e>com</span><span style=color:#f92672>/</span><span style=color:#a6e22e>company</span><span style=color:#f92672>/</span><span style=color:#a6e22e>company</span><span style=color:#f92672>-</span><span style=color:#a6e22e>sdk</span>
+<span style=color:#a6e22e>module</span> <span style=color:#a6e22e>github</span>.<span style=color:#a6e22e>com</span><span style=color:#f92672>/</span><span style=color:#a6e22e>user</span><span style=color:#f92672>/</span><span style=color:#66d9ef>go</span><span style=color:#f92672>-</span><span style=color:#a6e22e>pkg</span><span style=color:#f92672>-</span><span style=color:#a6e22e>sdk</span>    <span style=color:#75715e>// go和sdk都是多余的
+</span></code></pre></div><p><strong>好例子：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#a6e22e>module</span> <span style=color:#a6e22e>github</span>.<span style=color:#a6e22e>com</span><span style=color:#f92672>/</span><span style=color:#a6e22e>company</span><span style=color:#f92672>/</span><span style=color:#a6e22e>sdk</span>
+<span style=color:#a6e22e>module</span> <span style=color:#a6e22e>github</span>.<span style=color:#a6e22e>com</span><span style=color:#f92672>/</span><span style=color:#a6e22e>user</span><span style=color:#f92672>/</span><span style=color:#a6e22e>kit</span>
+</code></pre></div><h2 id=我的重构经验从-go-pkg-sdk-到-kit>我的重构经验：从 go-pkg-sdk 到 kit</h2>
+<h3 id=问题分析>问题分析</h3>
+<p>原来的命名 <code>go-pkg-sdk</code> 有以下问题：</p>
+<ol>
+<li>
+<p><strong>三层冗余词叠加</strong></p>
+<ul>
+<li><code>go</code> - 语言前缀（不推荐）</li>
+<li><code>pkg</code> - package的缩写</li>
+<li><code>sdk</code> - Software Development Kit</li>
+</ul>
+</li>
+<li>
+<p><strong>太长（11个字符）</strong></p>
+<ul>
+<li>不好输入</li>
+<li>不好记忆</li>
+</ul>
+</li>
+<li>
+<p><strong>违反Go社区习惯</strong></p>
+<ul>
+<li>Go官方明确说"Don&rsquo;t use the &lsquo;go&rsquo; prefix in package names"</li>
+</ul>
+</li>
+</ol>
+<h3 id=解决方案>解决方案</h3>
+<p>我选择了 <code>kit</code>（工具包），原因：</p>
+<ol>
+<li><strong>简洁（3个字母）</strong></li>
+<li><strong>语义清晰</strong> - kit就是工具包的意思</li>
+<li><strong>符合Go习惯</strong> - 参考了go-kit等项目</li>
+<li><strong>品牌感</strong> - 简短有力</li>
+</ol>
+<h3 id=对比知名项目>对比知名项目</h3>
+<table>
+<thead>
+<tr>
+<th>我的命名</th>
+<th>社区项目</th>
+<th>评价</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kit</code></td>
+<td><code>go-kit/kit</code></td>
+<td>⭐⭐⭐⭐⭐ 符合习惯</td>
+</tr>
+<tr>
+<td><code>kit</code></td>
+<td><code>gin</code></td>
+<td>⭐⭐⭐⭐ 简洁有力</td>
+</tr>
+<tr>
+<td><code>kit</code></td>
+<td><code>zap</code></td>
+<td>⭐⭐⭐⭐ 简短好记</td>
+</tr>
+</tbody>
+</table>
+<h2 id=接口设计的最佳实践>接口设计的最佳实践</h2>
+<h3 id=原则accept-interfaces-return-structs>原则：&ldquo;Accept interfaces, return structs&rdquo;</h3>
+<p>这是Go社区最重要的设计原则。</p>
+<h4 id=1-函数参数使用接口>1. 函数参数使用接口</h4>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// ❌ 错误：参数要求具体类型
+</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessOrder</span>(<span style=color:#a6e22e>logger</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>zap</span>.<span style=color:#a6e22e>Logger</span>, <span style=color:#a6e22e>order</span> <span style=color:#a6e22e>Order</span>) <span style=color:#66d9ef>error</span>
+
+<span style=color:#75715e>// ✅ 正确：参数接受接口
+</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessOrder</span>(<span style=color:#a6e22e>logger</span> <span style=color:#a6e22e>Logger</span>, <span style=color:#a6e22e>order</span> <span style=color:#a6e22e>Order</span>) <span style=color:#66d9ef>error</span>
+</code></pre></div><p><strong>为什么？</strong></p>
+<ul>
+<li>更灵活：可以传任何实现了Logger的类型</li>
+<li>更易测试：可以传mock logger</li>
+<li>更好的解耦</li>
+</ul>
+<h4 id=2-函数返回值使用具体类型>2. 函数返回值使用具体类型</h4>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// ❌ 错误：返回接口，不明确
+</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewService</span>(<span style=color:#a6e22e>db</span> <span style=color:#a6e22e>DB</span>) <span style=color:#a6e22e>Service</span> { <span style=color:#f92672>...</span> }
+
+<span style=color:#75715e>// ✅ 正确：返回具体类型，明确
+</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewUserService</span>(<span style=color:#a6e22e>db</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gorm</span>.<span style=color:#a6e22e>DB</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>UserService</span> { <span style=color:#f92672>...</span> }
+</code></pre></div><p><strong>为什么？</strong></p>
+<ul>
+<li>更明确：调用者知道拿到什么</li>
+<li>功能完整：可以访问所有public方法</li>
+<li>IDE友好：自动补全完美支持</li>
+</ul>
+<h4 id=3-真实例子>3. 真实例子</h4>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// 定义简单清晰的接口
+</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Logger</span> <span style=color:#66d9ef>interface</span> {
+    <span style=color:#a6e22e>Info</span>(<span style=color:#a6e22e>msg</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>fields</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>interface</span>{})
+    <span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>msg</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>fields</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>interface</span>{})
+}
+
+<span style=color:#75715e>// 构造函数：接受接口，返回具体类型
+</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewUserService</span>(<span style=color:#a6e22e>db</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gorm</span>.<span style=color:#a6e22e>DB</span>, <span style=color:#a6e22e>logger</span> <span style=color:#a6e22e>Logger</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>UserService</span> {
+    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>UserService</span>{
+        <span style=color:#a6e22e>db</span>: <span style=color:#a6e22e>db</span>,
+        <span style=color:#a6e22e>logger</span>: <span style=color:#a6e22e>logger</span>,
+    }
+}
+</code></pre></div><h2 id=何时应该做接口抽象>何时应该做接口抽象？</h2>
+<h3 id=-不应该做接口的情况>❌ 不应该做接口的情况</h3>
+<p><strong>案例：GORM的封装</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// ❌ 过度抽象
+</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>DB</span> <span style=color:#66d9ef>interface</span> {
+    <span style=color:#a6e22e>Create</span>(<span style=color:#f92672>...</span>) <span style=color:#a6e22e>DB</span>
+    <span style=color:#a6e22e>Find</span>(<span style=color:#f92672>...</span>) <span style=color:#a6e22e>DB</span>
+    <span style=color:#a6e22e>Where</span>(<span style=color:#f92672>...</span>) <span style=color:#a6e22e>DB</span>
+    <span style=color:#75715e>// ... 23个方法，几乎和GORM一模一样
+</span><span style=color:#75715e></span>}
+
+<span style=color:#75715e>// 问题：
+</span><span style=color:#75715e>// 1. 不会真的从GORM切换到XORM
+</span><span style=color:#75715e>// 2. 维护两套代码（GORM的API + 你的接口）
+</span><span style=color:#75715e>// 3. 失去了GORM的优势（类型安全、插件等）
+</span></code></pre></div><p><strong>为什么不应该？</strong></p>
+<ul>
+<li>没有真正的切换需求</li>
+<li>接口和实现太相似（没价值）</li>
+<li>维护成本高</li>
+</ul>
+<p><strong>正确的做法：</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// ✅ 直接使用GORM
+</span><span style=color:#75715e></span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewDB</span>(<span style=color:#a6e22e>config</span> <span style=color:#a6e22e>Config</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>gorm</span>.<span style=color:#a6e22e>DB</span>, <span style=color:#66d9ef>error</span>) {
+    <span style=color:#a6e22e>db</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>gorm</span>.<span style=color:#a6e22e>Open</span>(<span style=color:#a6e22e>mysql</span>.<span style=color:#a6e22e>Open</span>(<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>DSN</span>), <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>gorm</span>.<span style=color:#a6e22e>Config</span>{
+        <span style=color:#a6e22e>Logger</span>: <span style=color:#a6e22e>NewGormLogger</span>(<span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>Logger</span>), <span style=color:#75715e>// 只封装日志适配器
+</span><span style=color:#75715e></span>    })
+    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>db</span>, <span style=color:#a6e22e>err</span>
+}
+</code></pre></div><h3 id=-应该做接口的情况>✅ 应该做接口的情况</h3>
+<p><strong>案例：Logger接口</strong></p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=color:#75715e>// ✅ 合理的接口
+</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Logger</span> <span style=color:#66d9ef>interface</span> {
+    <span style=color:#a6e22e>Info</span>(<span style=color:#a6e22e>msg</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>fields</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>interface</span>{})
+    <span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>msg</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>fields</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>interface</span>{})
+}
+
+<span style=color:#75715e>// 可以有多种实现
+</span><span style=color:#75715e></span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ZapLogger</span> <span style=color:#66d9ef>struct</span> { <span style=color:#f92672>...</span> }
+<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>LogrusLogger</span> <span style=color:#66d9ef>struct</span> { <span style=color:#f92672>...</span> }
+<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>TestLogger</span> <span style=color:#66d9ef>struct</span> { <span style=color:#f92672>...</span> }  <span style=color:#75715e>// 测试用
+</span></code></pre></div><p><strong>为什么合理？</strong></p>
+<ul>
+<li>真实的切换需求（zap vs logrus）</li>
+<li>接口简洁稳定（Debug/Info/Error几十年不变）</li>
+<li>增加了价值（统一格式、集成trace）</li>
+</ul>
+<h2 id=包结构设计指南>包结构设计指南</h2>
+<h3 id=推荐的目录结构>推荐的目录结构</h3>
+<pre tabindex=0><code>kit/
+├── config/              # 模块根目录
+│   ├── config.go        # 核心API
+│   ├── option.go        # Options模式
+│   ├── watcher.go       # 具体功能
+│   ├── provider/        # 子模块
+│   │   └── provider.go
+│   └── examples/         # 使用示例
+├── log/                  # 另一个模块
+│   ├── logger.go        # 接口定义
+│   └── zap/             # 实现层
+│       └── logger.go
+└── docs/                 # 文档
+    └── architecture.md
+</code></pre><h3 id=命名约定>命名约定</h3>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>命名规则</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件名</td>
+<td><code>snake_case</code></td>
+<td><code>logger.go</code>, <code>config.go</code></td>
+</tr>
+<tr>
+<td>类型名</td>
+<td><code>PascalCase</code></td>
+<td><code>Logger</code>, <code>Config</code></td>
+</tr>
+<tr>
+<td>接口文件</td>
+<td>模块根目录</td>
+<td><code>logger.go</code>, <code>config.go</code></td>
+</tr>
+<tr>
+<td>实现目录</td>
+<td>子目录</td>
+<td><code>zap/</code>, <code>gorm/</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id=ai-agent友好的设计>AI Agent友好的设计</h3>
+<p>为了让AI更好地理解代码，我遵循了这些原则：</p>
+<ol>
+<li>
+<p><strong>清晰的模块边界</strong></p>
+<ul>
+<li>每个模块有独立的README</li>
+<li>接口和实现分离</li>
+</ul>
+</li>
+<li>
+<p><strong>自文档化的命名</strong></p>
+<ul>
+<li>文件名清晰表达功能</li>
+<li>目录结构反映层次关系</li>
+</ul>
+</li>
+<li>
+<p><strong>统一的API风格</strong></p>
+<ul>
+<li>所有模块用Options模式</li>
+<li>统一的错误处理</li>
+</ul>
+</li>
+</ol>
+<h2 id=包命名的场景建议>包命名的场景建议</h2>
+<h3 id=通用工具包>通用工具包</h3>
+<p><strong>命名选择：</strong></p>
+<ol>
+<li><code>kit</code> - 推荐⭐⭐⭐⭐⭐</li>
+<li><code>base</code> - 基础库</li>
+<li><code>core</code> - 核心库</li>
+<li><code>common</code> - 通用库</li>
+</ol>
+<h3 id=可观测性工具包>可观测性工具包</h3>
+<p>如果你的库主要做log/trace/metric集成：</p>
+<ol>
+<li><code>observe</code> - 推荐⭐⭐⭐⭐⭐（最契合）</li>
+<li><code>otel</code> - 如果基于OpenTelemetry</li>
+<li><code>insight</code> - 有品牌感</li>
+<li><code>beacon</code> - 视觉化</li>
+</ol>
+<h3 id=企业团队内部库>企业/团队内部库</h3>
+<pre tabindex=0><code>github.com/yourcompany/sdk/   # ✅
+github.com/yourcompany/kit/   # ✅
+github.com/yourcompany/base/  # ✅
+</code></pre><h2 id=命名决策表>命名决策表</h2>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>推荐命名</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>通用工具包</td>
+<td><code>kit</code></td>
+<td>简洁、社区认可</td>
+</tr>
+<tr>
+<td>配置管理</td>
+<td><code>config</code></td>
+<td>清晰、直接</td>
+</tr>
+<tr>
+<td>日志模块</td>
+<td><code>log</code> 或 <code>logger</code></td>
+<td>简短、标准</td>
+</tr>
+<tr>
+<td>数据库</td>
+<td><code>db</code></td>
+<td>简洁、清晰</td>
+</tr>
+<tr>
+<td>HTTP客户端</td>
+<td><code>http</code> 或 <code>client</code></td>
+<td>标准库风格</td>
+</tr>
+<tr>
+<td>Web框架</td>
+<td><code>web</code> 或 <code>server</code></td>
+<td>语义清晰</td>
+</tr>
+<tr>
+<td>缓存</td>
+<td><code>cache</code></td>
+<td>直接明了</td>
+</tr>
+<tr>
+<td>消息队列</td>
+<td><code>queue</code></td>
+<td>标准术语</td>
+</tr>
+</tbody>
+</table>
+<h2 id=重构检查清单>重构检查清单</h2>
+<p>如果你也要重构包名，按照这个清单：</p>
+<ul>
+<li><input disabled type=checkbox> 检查命名是否符合Go社区习惯</li>
+<li><input disabled type=checkbox> 避免冗余的前缀（go、pkg、sdk等）</li>
+<li><input disabled type=checkbox> 保持简短（3-8个字符最佳）</li>
+<li><input disabled type=checkbox> 更新go.mod的module名称</li>
+<li><input disabled type=checkbox> 批量更新所有import路径</li>
+<li><input disabled type=checkbox> 更新README.md</li>
+<li><input disabled type=checkbox> 更新文档中的引用</li>
+<li><input disabled type=checkbox> 验证所有示例代码</li>
+<li><input disabled type=checkbox> 通知团队成员</li>
+</ul>
+<h2 id=总结>总结</h2>
+<p>好的包命名应该：</p>
+<ol>
+<li>✅ <strong>简洁有力</strong> - 3-8个字符，好记好输入</li>
+<li>✅ <strong>语义清晰</strong> - 看名字就知道用途</li>
+<li>✅ <strong>符合社区习惯</strong> - 参考优秀项目</li>
+<li>✅ <strong>避免冗余</strong> - 不用go/xxx/pkg等前缀</li>
+<li>✅ <strong>有扩展性</strong> - 容易添加新模块</li>
+</ol>
+<p>记住：<strong>好的命名让代码自我解释，让AI更好理解，让团队更易维护。</strong></p>
+<h2 id=参考资源>参考资源</h2>
+<ul>
+<li><a href=https://go.dev/doc/effective_go#package-names>Effective Go - Package Names</a></li>
+<li><a href=https://github.com/golang/go/wiki/CodeReviewComments#package-names>Go Code Review Comments</a></li>
+<li><a href=https://go.dev/blog/package-names>Rob Pike: Don&rsquo;t use the &lsquo;go&rsquo; prefix</a></li>
+</ul>
+</div>
+</article>
+</main>
+</div><footer class=site-footer>
+<div class=container>
+<span>&copy; 2026 Notes.</span>
+</div>
+</footer><script>(function(){var e=document.querySelectorAll('.image-grid img'),a,c,b,d,i,g;if(!e.length)return;a=document.createElement('div'),a.className='image-lightbox',a.setAttribute('role','dialog'),a.setAttribute('aria-modal','true'),a.setAttribute('aria-hidden','true'),c=document.createElement('img'),c.className='image-lightbox__img',a.appendChild(c),b=document.createElement('button'),b.type='button',b.className='image-lightbox__close',b.setAttribute('aria-label','关闭图片'),b.innerHTML='&times;',a.appendChild(b),d=null;function f(){if(!a.classList.contains('is-open'))return;a.classList.remove('is-open'),a.setAttribute('aria-hidden','true'),c.removeAttribute('src'),d&&(d.focus({preventScroll:!0}),d=null)}function h(e,f,g){c.src=e,c.alt=f||'',a.classList.add('is-open'),a.setAttribute('aria-hidden','false'),d=g,b.focus({preventScroll:!0})}b.addEventListener('click',function(a){a.stopPropagation(),f()}),a.addEventListener('click',function(b){b.target===a&&f()}),document.addEventListener('keydown',function(a){a.key==='Escape'&&f()}),document.body.appendChild(a),i=function(a){a.setAttribute('tabindex','0'),a.setAttribute('role','button'),a.getAttribute('aria-label')||a.setAttribute('aria-label','点击放大图片'),a.addEventListener('click',function(b){var a=b.currentTarget;h(a.currentSrc||a.src,a.alt,a)}),a.addEventListener('keydown',function(a){if(a.key==='Enter'||a.key===' '){a.preventDefault();var b=a.currentTarget;h(b.currentSrc||b.src,b.alt,b)}})};for(g=0;g<e.length;g++)i(e[g])})()</script></body>
+</html>

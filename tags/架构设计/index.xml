@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>架构设计 on Notes</title><link>https://si40code.github.io/notes/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</link><description>Recent content in 架构设计 on Notes</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Mon, 27 Oct 2025 00:00:00 +0800</lastBuildDate><atom:link href="https://si40code.github.io/notes/tags/%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/index.xml" rel="self" type="application/rss+xml"/><item><title>Go 包命名的最佳实践：从 go-pkg-sdk 到 kit 的重构之旅</title><link>https://si40code.github.io/notes/posts/go-package-naming-guide/</link><pubDate>Mon, 27 Oct 2025 00:00:00 +0800</pubDate><guid>https://si40code.github.io/notes/posts/go-package-naming-guide/</guid><description>引言 最近我重构了一个Go工具包，从 go-pkg-sdk 重命名为 kit。这个过程让我深刻认识到包命名的重要性。好的命名能提升代码的可读性、可维护性，更重要的是，能让AI Agent更好地理解和导航代码。
+为什么命名如此重要？ 1. 可读性 好的包名应该让代码自解释：
+// ❌ 糟糕 import &amp;#34;yourproject/xlog&amp;#34; import &amp;#34;yourproject/xhttp&amp;#34; // ✅ 清晰 import &amp;#34;yourproject/log&amp;#34; import &amp;#34;yourproject/http&amp;#34; 2. 可维护性 遵循社区约定能让团队成员快速上手，也能让AI更好地理解代码结构。
+3. AI Agent友好 清晰的命名让AI更容易定位代码、理解模块关系、生成符合项目风格的代码。
+Go 包命名的核心原则 原则1：简短、清晰、单数 好例子：
+package log // ✅ package http // ✅ package db // ✅ package cache // ✅ 坏例子：
+package logs // ❌ 不要复数 package httputils // ❌ 太长 package my_logger // ❌ 不要下划线 package pkg // ❌ 太泛用 原则2：避免无意义的前缀/后缀 坏例子：</description></item></channel></rss>
